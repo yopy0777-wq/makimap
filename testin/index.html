@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="薪の販売場所を地図上で共有できるアプリケーション">
+    <meta name="theme-color" content="#8B4513">
+    <title>薪マップ - 薪の販売場所共有アプリ</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E🪵%3C/text%3E%3C/svg%3E">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-fire"></i> 薪マップ</h1>
+            <button id="addLocationBtn" class="btn btn-primary">
+                <i class="fas fa-plus"></i> 新規登録
+            </button>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main>
+        <!-- 地図エリア -->
+        <div id="map"></div>
+
+        <!-- フィルターパネル -->
+        <div id="filterPanel" class="filter-panel">
+            <button id="filterToggle" class="filter-toggle">
+                <i class="fas fa-filter"></i> フィルター
+            </button>
+            <div id="filterContent" class="filter-content">
+                <div class="filter-group">
+                    <label for="woodTypeFilter">薪の種類</label>
+                    <input type="text" id="woodTypeFilter" placeholder="例：ナラ、クヌギ">
+                </div>
+                <div class="filter-group">
+                    <label for="searchQuery">キーワード検索</label>
+                    <input type="text" id="searchQuery" placeholder="場所名、備考で検索">
+                </div>
+                <button id="applyFilter" class="btn btn-secondary">
+                    <i class="fas fa-search"></i> 検索
+                </button>
+                <button id="clearFilter" class="btn btn-outline">
+                    <i class="fas fa-times"></i> クリア
+                </button>
+            </div>
+        </div>
+
+        <!-- 登録リスト -->
+        <div id="listPanel" class="list-panel">
+            <div class="list-header">
+                <h2><i class="fas fa-list"></i> 登録一覧</h2>
+                <button id="listToggle" class="list-toggle">
+                    <i class="fas fa-chevron-up"></i>
+                </button>
+            </div>
+            <div id="listContent" class="list-content">
+                <div id="locationList"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 登録モーダル -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-plus-circle"></i> 薪販売場所の登録</h2>
+                <button class="close-btn" id="closeModalBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addLocationForm">
+                <div class="form-group">
+                    <label for="locationName">場所名 <span class="required">*</span></label>
+                    <input type="text" id="locationName" required placeholder="例：〇〇薪販売所">
+                </div>
+
+                <div class="form-group">
+                    <label for="woodType">薪の種類 <span class="required">*</span></label>
+                    <input type="text" id="woodType" required placeholder="例：ナラ、クヌギ、スギ">
+                </div>
+
+                <div class="form-group">
+                    <label for="price">価格 <span class="required">*</span></label>
+                    <input type="text" id="price" required placeholder="例：1束500円、10kg 2000円">
+                </div>
+
+                <div class="form-group">
+                    <label for="address">住所</label>
+                    <input type="text" id="address" placeholder="例：〇〇県〇〇市〇〇町1-2-3">
+                    <button type="button" id="getCurrentLocation" class="btn btn-outline btn-small">
+                        <i class="fas fa-location-arrow"></i> 現在地を取得
+                    </button>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="latitude">緯度 <span class="required">*</span></label>
+                        <input type="number" id="latitude" step="0.000001" required placeholder="例：35.681236">
+                    </div>
+                    <div class="form-group">
+                        <label for="longitude">経度 <span class="required">*</span></label>
+                        <input type="number" id="longitude" step="0.000001" required placeholder="例：139.767125">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="contact">連絡先</label>
+                    <input type="text" id="contact" placeholder="例：090-1234-5678、example@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">備考</label>
+                    <textarea id="notes" rows="4" placeholder="営業時間、その他の情報など"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" id="cancelBtn">キャンセル</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> 登録
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 詳細モーダル -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-info-circle"></i> 詳細情報</h2>
+                <button class="close-btn" id="closeDetailBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="detailContent"></div>
+        </div>
+    </div>
+
+    <!-- ローディング -->
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- トースト通知 -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="js/app.js"></script>
+</body>
+</html>
