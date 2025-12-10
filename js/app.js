@@ -699,7 +699,7 @@ window.openEditModal = function(id) {
 };
 
 // ============================================
-// 現在地取得 (getCurrentLocation 関数)
+// 現在地取得 (getCurrentLocation 関数) 
 // ============================================
 async function getCurrentLocation() {
     if (!navigator.geolocation) {
