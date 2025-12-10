@@ -44,7 +44,12 @@ function initMap() {
     const defaultLng = 138.0;
     const defaultZoom = 6;
 
-    map = L.map('map').setView([defaultLat, defaultLng], defaultZoom);
+    // 🟢 修正：worldCopyJump: false を追加
+    map = L.map('map', {
+        worldCopyJump: false // 地図の無限ラップ（左右の繰り返し）を無効にする
+    }).setView([defaultLat, defaultLng], defaultZoom);
+    
+    //map = L.map('map').setView([defaultLat, defaultLng], defaultZoom);
 
     // OpenStreetMapタイルレイヤー（無料）
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
