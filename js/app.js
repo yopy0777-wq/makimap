@@ -338,27 +338,50 @@ window.focusOnMap = function(lat, lng) {
     document.getElementById('listPanel').classList.add('collapsed');
 };
 
+
 // ============================================
-// フォーム送信
+// フォーム送信 (handleSubmit)
 // ============================================
 async function handleSubmit(e) {
     e.preventDefault();
     showLoading();
 
-    // 🟢 1. 値を取得
-    const latValue = document.getElementById('latitude').value;
-    const lngValue = document.getElementById('longitude').value;
+    const addressValue = document.getElementById('address').value;
+    let latValue = document.getElementById('latitude').value;
+    let lngValue = document.getElementById('longitude').value;
     
-    // 🟢 2. 数値型チェックと変換
-    const latitude = parseFloat(latValue);
-    const longitude = parseFloat(lngValue);
+    let latitude;
+    let longitude;
     
-    // 🟢 3. バリデーションチェック
+    // 1. 緯度・経度が空欄で、住所が入力されている場合、ジオコーディングを試みる
+    if ((!latValue || !lngValue) && addressValue) {
+        showToast('住所から座標を検索中...', 'info');
+        const coords = await geocodeAddress(addressValue);
+        
+        if (coords) {
+            latitude = coords.latitude;
+            longitude = coords.longitude;
+            // フォームの座標欄を更新（ユーザーに結果を見せる）
+            document.getElementById('latitude').value = coords.latitude.toFixed(6);
+            document.getElementById('longitude').value = coords.longitude.toFixed(6);
+            showToast('座標を取得しました', 'success');
+        } else {
+            // ジオコーディング失敗
+            showToast('住所から有効な座標を取得できませんでした。手動で入力してください。', 'error');
+            hideLoading();
+            return;
+        }
+    } else {
+        // 2. 緯度・経度が入力されている場合は、その値を使用
+        latitude = parseFloat(latValue);
+        longitude = parseFloat(lngValue);
+    }
+    
+    // 3. 最終バリデーション
     if (isNaN(latitude) || isNaN(longitude)) {
-        console.error('緯度と経度が数値ではありません。');
-        showToast('緯度と経度には有効な数値を入力してください', 'error');
+        showToast('緯度と経度が数値ではありません。手動で入力してください。', 'error');
         hideLoading();
-        return; // 処理を中断
+        return; 
     }
     // ----------------------------------
 
@@ -366,9 +389,9 @@ async function handleSubmit(e) {
         location_name: document.getElementById('locationName').value,
         wood_type: document.getElementById('woodType').value,
         price: document.getElementById('price').value,
-        address: document.getElementById('address').value || '',
-        latitude: latitude,     // 修正後の変数を使用
-        longitude: longitude,   // 修正後の変数を使用
+        address: addressValue || '', // 住所の変数を使用
+        latitude: latitude,     
+        longitude: longitude,   
         contact: document.getElementById('contact').value || '',
         notes: document.getElementById('notes').value || ''
     };
@@ -378,9 +401,7 @@ async function handleSubmit(e) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                // --認証キーをヘッダーに追加 --
                 'apikey': SUPABASE_ANON_KEY,
-                // 🟢 最終修正: Authorizationヘッダーを追加
                 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
             },
             body: JSON.stringify(formData)
@@ -392,6 +413,9 @@ async function handleSubmit(e) {
             document.getElementById('addLocationForm').reset();
             loadLocations();
         } else {
+            // 失敗時の詳細デバッグ
+            const errorText = await response.text(); 
+            console.error('APIエラーレスポンス:', errorText);
             throw new Error('登録に失敗しました');
         }
     } catch (error) {
@@ -401,7 +425,6 @@ async function handleSubmit(e) {
         hideLoading();
     }
 }
-
 // ============================================
 // フォーム更新 (編集)
 // ============================================
@@ -417,42 +440,68 @@ async function handleUpdate(e) {
         return;
     }
 
-    // (handleSubmitと同じバリデーションとformDataの作成ロジックをここに配置)
-    // ----------------------------------------------------
-    const latValue = document.getElementById('latitude').value;
-    const lngValue = document.getElementById('longitude').value;
-    const latitude = parseFloat(latValue);
-    const longitude = parseFloat(lngValue);
+    // 🟢 ジオコーディングに必要な値を取得
+    const addressValue = document.getElementById('address').value;
+    let latValue = document.getElementById('latitude').value;
+    let lngValue = document.getElementById('longitude').value;
     
+    let latitude;
+    let longitude;
+
+    // 1. 緯度・経度が空欄で、住所が入力されている場合、ジオコーディングを試みる
+    if ((!latValue || !lngValue) && addressValue) {
+        showToast('住所から座標を検索中...', 'info');
+        const coords = await geocodeAddress(addressValue); // ジオコーディング関数を呼び出し
+        
+        if (coords) {
+            latitude = coords.latitude;
+            longitude = coords.longitude;
+            // フォームの座標欄を更新（ユーザーに結果を見せる）
+            document.getElementById('latitude').value = coords.latitude.toFixed(6);
+            document.getElementById('longitude').value = coords.longitude.toFixed(6);
+            showToast('座標を取得しました', 'success');
+        } else {
+            // ジオコーディング失敗
+            showToast('住所から有効な座標を取得できませんでした。手動で入力してください。', 'error');
+            hideLoading();
+            return;
+        }
+    } else {
+        // 2. 緯度・経度が入力されている場合は、その値を使用
+        latitude = parseFloat(latValue);
+        longitude = parseFloat(lngValue);
+    }
+
+    // 3. 最終バリデーション
     if (isNaN(latitude) || isNaN(longitude)) {
-        console.error('緯度と経度が数値ではありません。');
-        showToast('緯度と経度には有効な数値を入力してください', 'error');
+        showToast('緯度と経度が数値ではありません。手動で入力してください。', 'error');
         hideLoading();
         return; 
     }
+    // ----------------------------------------------------
     
+    // 4. formDataの作成（更新後の座標を使用）
     const formData = {
         location_name: document.getElementById('locationName').value,
         wood_type: document.getElementById('woodType').value,
         price: document.getElementById('price').value,
-        address: document.getElementById('address').value || '',
+        address: addressValue || '',
         latitude: latitude,
         longitude: longitude,
         contact: document.getElementById('contact').value || '',
         notes: document.getElementById('notes').value || ''
     };
-    // ----------------------------------------------------
     
     try {
-        // 🟢 URLにID指定のクエリを追加
+        // URLにID指定のクエリを追加
         const url = `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?id=eq.${idToUpdate}`;
         
         const response = await fetch(url, {
-            method: 'PATCH', // 🟢 メソッドを PATCH に変更
+            method: 'PATCH', // メソッドは PATCH で更新
             headers: {
                 'Content-Type': 'application/json',
                 'apikey': SUPABASE_ANON_KEY,
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}` // 👈 追加
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
             },
             body: JSON.stringify(formData)
         });
@@ -462,7 +511,6 @@ async function handleUpdate(e) {
             closeAddModal();
             loadLocations(); // データ再読み込み
         } else {
-            // サーバーからのレスポンスボディを取得してデバッグするとより詳細がわかります
             const errorText = await response.text(); 
             console.error('更新エラー:', errorText);
             throw new Error('更新に失敗しました');
@@ -473,6 +521,31 @@ async function handleUpdate(e) {
     } finally {
         hideLoading();
     }
+}
+// ============================================
+// ジオコーディング関数（住所 -> 座標）
+// ============================================
+async function geocodeAddress(address) {
+    if (!address) return null;
+
+    // Nominatim APIを使用（OpenStreetMap）
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1&countrycodes=jp`;
+    
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data && data.length > 0) {
+            // 最も一致度の高い結果を返す
+            return {
+                latitude: parseFloat(data[0].lat),
+                longitude: parseFloat(data[0].lon)
+            };
+        }
+    } catch (error) {
+        console.error('ジオコーディングエラー:', error);
+    }
+    return null;
 }
 
 // ============================================
