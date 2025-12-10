@@ -365,6 +365,10 @@ window.showDetail = async function(locationId) {
                     <i class="fas fa-map-marked-alt"></i> 地図で確認
                 </button>
                 
+                <a href="https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}" target="_blank" class="btn btn-outline" style="margin-left: 10px;">
+                    <i class="fab fa-google"></i> Googleマップで開く
+                </a>
+                
                 <button class="btn btn-secondary" onclick="openEditModal('${location.id}')">
                     <i class="fas fa-edit"></i> 編集
                 </button>
@@ -442,7 +446,9 @@ async function handleSubmit(e) {
     const formData = {
         location_name: document.getElementById('locationName').value,
         wood_type: document.getElementById('woodType').value,
-        price: document.getElementById('price').value,
+        //price: document.getElementById('price').value,
+        // 🟢 修正: 価格を数値に変換（NaNはnullまたは0として扱う）
+        price: parseInt(document.getElementById('price').value) || null,
         address: addressValue || '', // 住所の変数を使用
         latitude: latitude,     
         longitude: longitude,   
@@ -538,7 +544,9 @@ async function handleUpdate(e) {
     const formData = {
         location_name: document.getElementById('locationName').value,
         wood_type: document.getElementById('woodType').value,
-        price: document.getElementById('price').value,
+        //price: document.getElementById('price').value,
+        // 🟢 修正: 価格を数値に変換（NaNはnullまたは0として扱う）
+        price: parseInt(document.getElementById('price').value) || null,
         address: addressValue || '',
         latitude: latitude,
         longitude: longitude,
