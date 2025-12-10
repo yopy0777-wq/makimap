@@ -4,6 +4,7 @@
 let map;
 let markers = [];
 let allLocations = [];
+let isSelectingLocation = false; //  NEW: マップ選択モードを追跡するフラグ
 const TABLE_NAME = 'firewood_locations';
 
 const SUPABASE_URL = 'https://plmbomjfhfzpucrexqpp.supabase.co'; // ステップ1-3で確認
@@ -97,17 +98,29 @@ function initEventListeners() {
         if (e.target.id === 'detailModal') closeDetailModal();
     });
 
-    // 🟢 追加: マップクリックで座標をフォームに自動入力するリスナー
-    if (map) {
-        map.on('click', function(e) {
-            // モーダルが開いている場合のみ処理を実行
-            if (document.getElementById('addModal').classList.contains('active')) {
-                document.getElementById('latitude').value = e.latlng.lat.toFixed(6);
-                document.getElementById('longitude').value = e.latlng.lng.lng.toFixed(6);
-                showToast(`クリックした座標（${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)}）を取得しました`, 'info');
-            }
-        });
-    }
+   // 🟢 新しいボタンのリスナーを追加
+    document.getElementById('selectFromMapBtn').addEventListener('click', startMapSelection);
+    
+// 🟢 マップクリックリスナーの修正 (isSelectingLocation フラグを確認する)
+if (map) {
+    map.on('click', function(e) {
+        // 修正: マップ選択モードがONの時のみ動作する
+        if (isSelectingLocation) {
+            // 1. 座標を取得してフォームにセット
+            document.getElementById('latitude').value = e.latlng.lat.toFixed(6);
+            document.getElementById('longitude').value = e.latlng.lng.lng.toFixed(6);
+            
+            // 2. 選択モードをOFFに戻す
+            isSelectingLocation = false;
+            
+            // 3. モーダルを再表示 (openAddModal関数を呼び出す)
+            openAddModal(); 
+
+            // 4. ユーザーに通知
+            showToast(`座標（${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)}）を取得し、フォームに反映しました`, 'success');
+        }
+    });
+}
 
     // フォーム送信
     document.getElementById('addLocationForm').addEventListener('submit', handleSubmit);
@@ -534,6 +547,21 @@ async function handleUpdate(e) {
         hideLoading();
     }
 }
+
+// ============================================
+// マップ選択モード制御
+// ============================================
+function startMapSelection() {
+    // 1. モーダルを閉じる
+    closeAddModal();
+    
+    // 2. 選択モードをONにする
+    isSelectingLocation = true;
+    
+    // 3. ユーザーに通知し、マップの操作を促す
+    showToast('地図上の登録したい場所をクリックしてください', 'info');
+}
+
 // ============================================
 // ジオコーディング関数（住所 -> 座標）
 // ============================================
