@@ -234,7 +234,7 @@ function displayLocationsOnMap(locations) {
                 <div style="min-width: 200px;">
                     <h3 style="margin: 0 0 0.5rem 0; color: #8B4513; font-size: 1.1rem;">${location.location_name || '名称未設定'}</h3>
                     <p style="margin: 0.3rem 0;"><strong>🪵 種類:</strong> ${location.wood_type || '未設定'}</p>
-                    <p style="margin: 0.3rem 0;"><strong>💰 価格:</strong> ${location.price || '未設定'}</p>
+                    <p style="margin: 0.3rem 0;"><strong>💰 価格:</strong> ${location.price || '未設定'}円</p>
                     <button onclick="showDetail('${location.id}')" style="margin-top: 0.5rem; padding: 0.5rem 1rem; background: #8B4513; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100%;">
                         詳細を見る
                     </button>
@@ -279,7 +279,7 @@ function displayLocationsList(locations) {
             </div>
             <div class="location-card-info">
                 <p><i class="fas fa-tree"></i> ${location.wood_type || '未設定'}</p>
-                <p><i class="fas fa-yen-sign"></i> ${location.price || '未設定'}</p>
+                <p><i class="fas fa-yen-sign"></i> ${location.price || '未設定'}円</p>
                 ${location.address ? `<p><i class="fas fa-map-marker-alt"></i> ${location.address}</p>` : ''}
             </div>
         </div>
@@ -331,27 +331,29 @@ window.showDetail = async function(locationId) {
             
             <div class="detail-section">
                 <h3><i class="fas fa-yen-sign"></i> 価格</h3>
-                <p>${location.price || '未設定'}</p>
+                <p>${location.price || '未設定'}円</p>
             </div>
             
+            <!--
             ${location.address ? `
                 <div class="detail-section">
                     <h3><i class="fas fa-map-marker-alt"></i> 住所</h3>
                     <p>${location.address}</p>
                 </div>
-            ` : ''}
+            ` : ''}-->
             
             <div class="detail-section">
                 <h3><i class="fas fa-map"></i> 位置情報</h3>
                 <p>緯度: ${location.latitude}, 経度: ${location.longitude}</p>
             </div>
             
+            <!--
             ${location.contact ? `
                 <div class="detail-section">
                     <h3><i class="fas fa-phone"></i> 連絡先</h3>
                     <p>${location.contact}</p>
                 </div>
-            ` : ''}
+            ` : ''}-->
             
             ${location.notes ? `
                 <div class="detail-section">
