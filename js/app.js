@@ -428,6 +428,12 @@ async function handleSubmit(e) {
         }
     }
     
+    const locationName = document.getElementById('locationName').value;
+    if (locationName.length > 40) {
+        showToast('場所名は40文字以内で入力してください', 'error');
+        return;
+    }
+    
     showLoading();
 
     //const addressValue = document.getElementById('address').value;
@@ -515,6 +521,12 @@ async function handleUpdate(e) {
             return;
         }
     }
+    
+    const locationName = document.getElementById('locationName').value;
+    if (locationName.length > 40) {
+        showToast('場所名は40文字以内で入力してください', 'error');
+        return;
+    }    
     
     showLoading();
     
