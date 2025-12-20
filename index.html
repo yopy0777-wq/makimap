@@ -118,7 +118,16 @@
 
                 <div class="form-group">
                     <label for="price">価格 <span class="required">*</span></label>
-                    <input type="text" id="price" required placeholder="例：500、 2000">
+                    <input 
+                          type="number" 
+                          id="price" 
+                          class="form-control" 
+                          placeholder="例: 700 1200" 
+                          min="0" 
+                          step="1" 
+                          pattern="\d*" 
+                          required
+                      >
                 </div>
 
                 <div class="form-group">

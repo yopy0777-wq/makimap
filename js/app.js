@@ -411,6 +411,16 @@ window.focusOnMap = function(lat, lng) {
 // ============================================
 async function handleSubmit(e) {
     e.preventDefault();
+    
+    const priceInput = document.getElementById('price').value;
+    const priceValue = parseInt(priceInput);
+
+    // 入力がある場合に、数値でない、またはマイナスでないかをチェック
+    if (priceInput !== "" && (isNaN(priceValue) || priceValue < 0)) {
+        showToast('価格には0以上の数字を入力してください', 'error');
+        return; // ここで処理を中断
+    }
+    
     showLoading();
 
     //const addressValue = document.getElementById('address').value;
@@ -482,6 +492,16 @@ async function handleSubmit(e) {
 // ============================================
 async function handleUpdate(e) {
     e.preventDefault();
+    
+    const priceInput = document.getElementById('price').value;
+    const priceValue = parseInt(priceInput);
+
+    // 入力がある場合に、数値でない、またはマイナスでないかをチェック
+    if (priceInput !== "" && (isNaN(priceValue) || priceValue < 0)) {
+        showToast('価格には0以上の数字を入力してください', 'error');
+        return; // ここで処理を中断
+    }
+    
     showLoading();
     
     // フォームに保持したIDを取得
