@@ -251,6 +251,8 @@ function displayLocationsOnMap(locations) {
 function displayLocationsList(locations) {
     const listContainer = document.getElementById('locationList');
     
+    const date = location.updated_at ? new Date(location.updated_at).toLocaleDateString('ja-JP') : '-';
+    
     if (locations.length === 0) {
         listContainer.innerHTML = `
             <div class="empty-state">
@@ -265,6 +267,7 @@ function displayLocationsList(locations) {
         <div class="location-card" onclick="showDetail('${location.id}')">
             <div class="location-card-header">
                 <div class="location-card-title">${location.location_name || '名称未設定'}</div>
+                <span style="font-size: 0.7rem; color: #888;">更新: ${date}</span> </div>
             </div>
             <div class="location-card-info">
                 <p><i class="fas fa-tree"></i> ${location.wood_type || '未設定'}</p>
@@ -307,6 +310,12 @@ window.showDetail = async function(locationId) {
         if (!location) throw new Error("Location not found");
 
         const detailContent = document.getElementById('detailContent');
+        
+        // window.showDetail 内の HTML 生成部分 日付追加分
+        const lastUpdate = location.updated_at 
+            ? new Date(location.updated_at).toLocaleString('ja-JP') 
+            : '不明';
+        
         detailContent.innerHTML = `
             <div class="detail-section">
                 <h3><i class="fas fa-store"></i> 場所名</h3>
@@ -364,6 +373,12 @@ window.showDetail = async function(locationId) {
                     <i class="fas fa-edit"></i> 編集
                 </button>
             </div>
+            
+            <div class="detail-section">
+                            <h3><i class="fas fa-history"></i> 最終更新日</h3>
+                <p>${lastUpdate}</p>
+            </div>
+
         `;
         
         openDetailModal();
@@ -426,7 +441,8 @@ async function handleSubmit(e) {
         latitude: latitude,     
         longitude: longitude,   
         //contact: document.getElementById('contact').value || '',
-        notes: document.getElementById('notes').value || ''
+        notes: document.getElementById('notes').value || '',
+        updated_at: new Date().toISOString()
     };
 
     try {
@@ -505,7 +521,8 @@ async function handleUpdate(e) {
         latitude: latitude,
         longitude: longitude,
         //contact: document.getElementById('contact').value || '',
-        notes: document.getElementById('notes').value || ''
+        notes: document.getElementById('notes').value || '',
+        updated_at: new Date().toISOString()
     };
     
     try {
