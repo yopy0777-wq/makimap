@@ -761,57 +761,88 @@ form {
 
 
 /* ============================================
-   住所検索結果
+   住所検索（デザイン統一版）
    ============================================ */
-/* --- 検索セクションのレイアウト調整 --- */
-.search-section {
-    background-color: #fcf8f5;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
+
+.search-outer-container {
+    width: 100%;
+    background-color: transparent; /* 背景を白に馴染ませる */
+    margin-bottom: 20px;
+    box-sizing: border-box;
 }
 
-.search-input-group {
+/* 入力欄とボタンを一体化させる */
+.search-flex-box {
     display: flex;
-    gap: 8px;
-    margin-top: 5px;
+    gap: 0; 
+    width: 100%;
+    border: 2px solid var(--primary-color); /* 薪の茶色で囲む */
+    border-radius: 8px;
+    overflow: hidden; /* 角丸からはみ出さないように */
+    background: white;
 }
 
-.search-input-group .form-control {
-    flex: 1; /* 入力欄を広げる */
+.search-flex-box .form-control {
+    border: none !important; /* 既存の枠線を消す */
+    flex: 1;
+    padding: 12px;
+    outline: none;
+    box-shadow: none;
+    min-width: 0; /* 突き抜け防止 */
 }
 
-.search-input-group .btn {
-    white-space: nowrap; /* ボタンの文字を折り返さない */
+.search-flex-box .btn-secondary {
+    background-color: var(--primary-color); /* ボタンを茶色に */
+    color: white;
+    border: none;
+    border-radius: 0;
+    padding: 0 15px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
 }
 
-/* 検索結果リスト */
+.search-flex-box .btn-secondary:hover {
+    background-color: var(--primary-dark);
+}
+
+/* 検索結果リストをスッキリさせる */
 .search-results-list {
     background: white;
     border: 1px solid var(--border-color);
-    border-radius: 4px;
-    margin-top: 5px;
-    max-height: 150px;
+    border-top: none;
+    max-height: 200px;
     overflow-y: auto;
     width: 100%;
-    z-index: 1001;
+    box-sizing: border-box;
+    box-shadow: var(--shadow);
 }
 
 .search-result-item {
-    padding: 8px 12px;
-    border-bottom: 1px solid #eee;
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0f0f0;
     cursor: pointer;
     font-size: 0.85rem;
+    color: var(--text-primary);
 }
 
 .search-result-item:hover {
-    background-color: var(--bg-light);
+    background-color: #fff9f5; /* ほんのり茶色系の背景 */
 }
 
-/* 補助テキスト */
-.text-secondary {
+.help-text {
     font-size: 0.75rem;
     color: var(--text-secondary);
     display: block;
-    margin-top: 4px;
+    margin-top: 6px;
+}
+
+/* 区切り線も馴染ませる */
+.form-divider {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 15px 0;
 }
