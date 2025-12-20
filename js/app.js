@@ -437,7 +437,6 @@ async function handleSubmit(e) {
         return;
     }
 
-    const priceValue = parseInt(priceInput);
     if (isNaN(priceValue) || priceValue < 0) {
         showToast('価格には0以上の数字を入力してください', 'error');
         return;
@@ -549,7 +548,6 @@ async function handleUpdate(e) {
         return;
     }
 
-    const priceValue = parseInt(priceInput);
     if (isNaN(priceValue) || priceValue < 0) {
         showToast('価格には0以上の数字を入力してください', 'error');
         return;
