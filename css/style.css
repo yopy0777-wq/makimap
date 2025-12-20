@@ -63,7 +63,6 @@ header h1 {
     gap: 0.5rem;
 }
 
-/* style.css に追加 */
 .header-actions {
     display: flex;
     gap: 10px; /* ボタン同士の隙間 */
@@ -78,6 +77,23 @@ header h1 {
     align-items: center;
     justify-content: center;
     border-radius: 50%; /* 丸いボタンにする */
+    border: none;           /* 通常の枠線を消す */
+    outline: none;          /* クリックした時の青い枠などを消す */
+    background: transparent; /* 背景を透明にする */
+    
+    color: white;           /* アイコンの色を白にする（ヘッダーが茶色の場合） */
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+/* マウスを乗せた時に少し背景を明るくする（ボタンだと分かりやすくするため） */
+#refreshBtn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* クリックした瞬間 */
+#refreshBtn:active {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 /* 回転アニメーション用 */
