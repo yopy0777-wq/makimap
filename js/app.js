@@ -416,9 +416,16 @@ async function handleSubmit(e) {
     const priceValue = parseInt(priceInput);
 
     // 入力がある場合に、数値でない、またはマイナスでないかをチェック
-    if (priceInput !== "" && (isNaN(priceValue) || priceValue < 0)) {
-        showToast('価格には0以上の数字を入力してください', 'error');
-        return; // ここで処理を中断
+    if (priceInput !== "") {
+        if (isNaN(priceValue) || priceValue < 0) {
+            showToast('価格には0以上の数字を入力してください', 'error');
+            return;
+        }
+        // 100,000(10万）以上の場合はエラーにする
+        if (priceValue > 100000) {
+            showToast('価格が大きすぎます。10万円以内で入力してください', 'error');
+            return;
+        }
     }
     
     showLoading();
@@ -497,9 +504,16 @@ async function handleUpdate(e) {
     const priceValue = parseInt(priceInput);
 
     // 入力がある場合に、数値でない、またはマイナスでないかをチェック
-    if (priceInput !== "" && (isNaN(priceValue) || priceValue < 0)) {
-        showToast('価格には0以上の数字を入力してください', 'error');
-        return; // ここで処理を中断
+    if (priceInput !== "") {
+        if (isNaN(priceValue) || priceValue < 0) {
+            showToast('価格には0以上の数字を入力してください', 'error');
+            return;
+        }
+        // 100,000(10万）以上の場合はエラーにする
+        if (priceValue > 100000) {
+            showToast('価格が大きすぎます。10万円以内で入力してください', 'error');
+            return;
+        }
     }
     
     showLoading();
