@@ -75,18 +75,6 @@ function initMap() {
             document.getElementById('longitude').value = e.latlng.lng.toFixed(6); 
             
             showToast('座標を取得しました。住所を検索中...', 'info');
-
-            // 🟢 逆ジオコーディングを実行 
-            /*const address = await reverseGeocode(e.latlng.lat, e.latlng.lng);
-            
-            if (address) {
-                document.getElementById('address').value = address;
-                showToast(`座標と住所（${address.substring(0, 20)}...）をフォームに反映しました`, 'success');
-            } else {
-                document.getElementById('address').value = ''; // 取得できなかった場合はクリア
-                showToast('座標は取得しましたが、住所の検索に失敗しました。手動で入力してください。', 'warning');
-            }
-            */
             
             // 2. 選択モードをOFFに戻す
             isSelectingLocation = false;
@@ -414,26 +402,6 @@ async function handleSubmit(e) {
     let latitude;
     let longitude;
     
-    /* 1. 緯度・経度が空欄で、住所が入力されている場合、ジオコーディングを試みる
-    if ((!latValue || !lngValue) && addressValue) {
-        showToast('住所から座標を検索中...', 'info');
-        const coords = await geocodeAddress(addressValue);
-        
-        if (coords) {
-            latitude = coords.latitude;
-            longitude = coords.longitude;
-            // フォームの座標欄を更新（ユーザーに結果を見せる）
-            document.getElementById('latitude').value = coords.latitude.toFixed(6);
-            document.getElementById('longitude').value = coords.longitude.toFixed(6);
-            showToast('座標を取得しました', 'success');
-        } else {
-            // ジオコーディング失敗
-            showToast('住所から有効な座標を取得できませんでした。手動で入力してください。', 'error');
-            hideLoading();
-            return;
-        }
-    } else {
-       */
        
         // 2. 緯度・経度が入力されている場合は、その値を使用
         latitude = parseFloat(latValue);
@@ -512,27 +480,6 @@ async function handleUpdate(e) {
     
     let latitude;
     let longitude;
-
-    /* 1. 緯度・経度が空欄で、住所が入力されている場合、ジオコーディングを試みる
-    if ((!latValue || !lngValue) && addressValue) {
-        showToast('住所から座標を検索中...', 'info');
-        const coords = await geocodeAddress(addressValue); // ジオコーディング関数を呼び出し
-        
-        if (coords) {
-            latitude = coords.latitude;
-            longitude = coords.longitude;
-            // フォームの座標欄を更新（ユーザーに結果を見せる）
-            document.getElementById('latitude').value = coords.latitude.toFixed(6);
-            document.getElementById('longitude').value = coords.longitude.toFixed(6);
-            showToast('座標を取得しました', 'success');
-        } else {
-            // ジオコーディング失敗
-            showToast('住所から有効な座標を取得できませんでした。手動で入力してください。', 'error');
-            hideLoading();
-            return;
-        }
-    } else {
-        */
         
         // 2. 緯度・経度が入力されている場合は、その値を使用
         latitude = parseFloat(latValue);
@@ -616,68 +563,7 @@ function startMapSelection() {
     showToast('地図上の登録したい場所をクリックしてください', 'info');
 }
 
-/*ジオコーディング系削除
-// ============================================
-// ジオコーディング関数（住所 -> 座標）
-// ============================================
-async function geocodeAddress(address) {
-    if (!address) return null;
 
-    // 検索精度向上のため、住所に「日本」を付加
-    const fullAddress = address.includes('日本') ? address : address + ', 日本';
-
-    // Nominatim APIを使用（OpenStreetMap）
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}&limit=1&countrycodes=jp`;
-    
-    try {
-        const response = await fetch(url);
-        // ステータスコードの確認
-        if (!response.ok) {
-            console.error('Nominatim API Request Failed with status:', response.status);
-            return null;
-        }
-
-        const data = await response.json();
-
-        if (data && data.length > 0) {
-            // 最も一致度の高い結果を返す
-            return {
-                latitude: parseFloat(data[0].lat),
-                longitude: parseFloat(data[0].lon)
-            };
-        }
-    } catch (error) {
-        console.error('ジオコーディングエラー:', error);
-    }
-    return null;
-}
-
-// ============================================
-// 逆ジオコーディング関数（座標 -> 住所）を新規追加
-// ============================================
-async function reverseGeocode(lat, lng) {
-    // Nominatim APIを使用（OpenStreetMap）
-    // lat, lon で座標を指定し、format=json を指定
-    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
-    
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            console.error('Nominatim Reverse API Request Failed with status:', response.status);
-            return null;
-        }
-
-        const data = await response.json();
-        
-        if (data && data.display_name) {
-            // 取得した住所の表示名 (display_name) を返す
-            return data.display_name;
-        }
-    } catch (error) {
-        console.error('逆ジオコーディングエラー:', error);
-    }
-    return null;
-}*/
 
 // ============================================
 // 編集モーダル操作
@@ -748,17 +634,6 @@ async function getCurrentLocation() {
             
             showToast('現在地を取得しました。住所を検索中...', 'info');
             
-            // 🟢 逆ジオコーディングを実行
-           /* const address = await reverseGeocode(lat, lng);
-            
-            if (address) {
-                document.getElementById('address').value = address;
-                showToast('現在地座標と住所をフォームに反映しました', 'success');
-            } else {
-                document.getElementById('address').value = '';
-                showToast('座標は取得しましたが、住所の検索に失敗しました。', 'warning');
-            }
-            */
             
             hideLoading();
         },
