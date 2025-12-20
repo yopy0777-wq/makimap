@@ -758,3 +758,27 @@ form {
     margin-bottom: 1rem;
     display: block;
 }
+
+
+/* ============================================
+   住所検索結果
+   ============================================ */
+.search-results-list {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin-top: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.search-result-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.search-result-item:hover {
+    background-color: var(--bg-light);
+}

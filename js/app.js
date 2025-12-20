@@ -776,6 +776,63 @@ async function getCurrentLocation() {
         }
     );
 }
+
+// ============================================
+// 住所検索機能 (searchAddress 関数) 
+// ============================================
+
+async function searchAddress() {
+    const query = document.getElementById('placeSearch').value;
+    if (!query) return;
+
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&countrycodes=jp`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        const resultsContainer = document.getElementById('searchResults');
+        resultsContainer.innerHTML = ''; // 前の結果をクリア
+
+        if (data.length === 0) {
+            showToast('場所が見つかりませんでした', 'error');
+            return;
+        }
+
+        // 検索結果のリストを表示
+        data.forEach(place => {
+            const div = document.createElement('div');
+            div.className = 'search-result-item';
+            div.textContent = place.display_name;
+            div.onclick = () => {
+                // 選択した場所に地図を移動
+                const lat = parseFloat(place.lat);
+                const lon = parseFloat(place.lon);
+                map.setView([lat, lon], 16);
+                
+                // 入力欄に自動反映
+                document.getElementById('latitude').value = lat;
+                document.getElementById('longitude').value = lon;
+                
+                // 場所名が空なら検索名を入れる（任意）
+                if(!document.getElementById('locationName').value) {
+                    document.getElementById('locationName').value = place.name || '';
+                }
+
+                resultsContainer.innerHTML = ''; // リストを閉じる
+                showToast('地図を移動しました');
+            };
+            resultsContainer.appendChild(div);
+        });
+    } catch (error) {
+        console.error('Search error:', error);
+        showToast('検索中にエラーが発生しました', 'error');
+    }
+}
+
+// initEventListeners に以下を追加してください
+// document.getElementById('execSearchBtn').addEventListener('click', searchAddress);
+
 // ============================================
 // フィルター関連
 // ============================================
