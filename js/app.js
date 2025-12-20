@@ -310,9 +310,13 @@ window.showDetail = async function(locationId) {
 
         const detailContent = document.getElementById('detailContent');
         
-        // window.showDetail 内の HTML 生成部分 日付追加分
+        // window.showDetail 内の修正
         const lastUpdate = location.updated_at 
-            ? new Date(location.updated_at).toLocaleString('ja-JP') 
+            ? new Date(location.updated_at).toLocaleDateString('ja-JP', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            }) 
             : '不明';
         
         detailContent.innerHTML = `
