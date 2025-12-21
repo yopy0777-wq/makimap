@@ -312,42 +312,37 @@ main {
    リストパネル
    ============================================ */
 .list-panel {
-    position: fixed; /* absoluteより安定します */
+    position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 500;
+    z-index: 2000; /* 地図より確実に上に */
     background: var(--bg-white);
     border-radius: 20px 20px 0 0;
-    box-shadow: 0 -4px 16px rgba(0,0,0,0.15);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
     
-    /* 🔴 高さは固定し、位置を動かすように変更 */
-    height: 50vh; 
-    transition: transform 0.3s ease;
-    transform: translateY(0); /* 通常時は表示 */
+    /* 🔴 高さを固定 */
+    height: 400px; 
+    
+    /* 🔴 アニメーションは「位置（bottom）」で制御 */
+    transition: bottom 0.3s ease;
+    bottom: 0; /* 開いている時 */
 }
 
 .list-panel.collapsed {
-    /* 60pxだけ残して、あとは画面の下へ突き抜けさせる */
-    transform: translateY(calc(50vh - 60px));
+    bottom: -340px; /* 400 - 60 = 340px 下げることで、60pxだけ画面に残る */
 }
 
 .list-header {
-    height: 60px; /* 高さを固定して計算しやすくする */
+    height: 60px; /* ヘッダーの高さを固定 */
     padding: 0 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 2px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
     cursor: pointer;
-}
-
-.list-content {
-    padding: 1rem;
-    overflow-y: auto;
-    /* ヘッダーの60pxを引いた分をスクロール可能にする */
-    height: calc(50vh - 60px); 
-    -webkit-overflow-scrolling: touch; /* iPhoneでのスクロールをヌルヌルに */
+    background: var(--bg-white);
+    border-radius: 20px 20px 0 0;
 }
 
 .list-header h2 {
@@ -376,9 +371,10 @@ main {
 }
 
 .list-content {
-    padding: 1rem;
+    height: 340px; /* パネル全体(400) - ヘッダー(60) */
     overflow-y: auto;
-    max-height: calc(50vh - 80px);
+    padding: 1rem;
+    -webkit-overflow-scrolling: touch;
 }
 
 .location-card {
