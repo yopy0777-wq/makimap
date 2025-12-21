@@ -875,8 +875,6 @@ form {
 /* ヘルプ内容のスタイル */
 .help-content {
     max-width: 500px;
-    padding: 40px !important; /* 20px→40pxに大幅アップ */
-    border-radius: 20px;
 }
 
 .help-body {
@@ -888,7 +886,6 @@ form {
     align-items: flex-start;
     gap: 20px;
     margin-bottom: 35px;
-    
 }
 
 .step-number {
