@@ -320,50 +320,52 @@ main {
    リストパネル
    ============================================ */
 .list-panel {
-    position: fixed;
-    bottom: 0; /* 基準を下に固定 */
+    position: fixed; /* absolute から fixed に変更 */
+    bottom: 0;
     left: 0;
     right: 0;
     z-index: 2000;
     background: var(--bg-white);
     border-radius: 20px 20px 0 0;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.15);
     
-    height: 400px; /* パネルの高さ */
+    /* 🟢 高さを固定値にする（vhを使わないのがiPhoneで一番安定します） */
+    height: 400px; 
     
-    /* 🔴 iPhoneの下部バー（ホームインジケーター）の余白を自動確保 */
-    padding-bottom: env(safe-area-inset-bottom); 
-
-    /* 🔴 位置制御：下から「パネルの高さ - ヘッダー分」だけ下げて隠す */
+    /* 🟢 下部の余白（iPhoneのホームバー）を考慮 */
+    padding-bottom: env(safe-area-inset-bottom);
+    
+    /* 🟢 アニメーションは transform で行う */
     transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1.0);
-    transform: translateY(calc(400px - 60px)); /* 初期状態（閉じている） */
-}
-
-/* 🟢 表示状態：元の位置(0)に戻す */
-.list-panel:not(.collapsed) {
+    
+    /* 初期状態は「開いている」状態 */
     transform: translateY(0);
 }
 
-/* 🔴 collapsedクラスがついた時に「隠す位置」へ移動 */
+/* 🟢 閉じている時：パネルの高さ(400)からヘッダー分(60)を引いた340px分下げる */
 .list-panel.collapsed {
-    transform: translateY(calc(400px - 60px));
+    transform: translateY(340px);
 }
 
 .list-header {
-    height: 60px;
+    height: 60px; /* 高さを固定 */
     padding: 0 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-bottom: 2px solid var(--border-color);
+    cursor: pointer;
     background: var(--bg-white);
     border-radius: 20px 20px 0 0;
-    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent; /* タップ時の青い枠を消す */
 }
 
 .list-content {
-    /* パネルの高さ(400) - ヘッダー(60) */
-    height: 340px; 
+    padding: 1rem;
     overflow-y: auto;
+    /* 🟢 パネルの高さ(400) - ヘッダー(60) */
+    height: 340px; 
     -webkit-overflow-scrolling: touch;
 }
 
@@ -392,12 +394,7 @@ main {
     transform: rotate(180deg);
 }
 
-/*.list-content {
-    height: 340px; /* パネル全体(400) - ヘッダー(60) */
-    overflow-y: auto;
-    padding: 1rem;
-    -webkit-overflow-scrolling: touch;
-}*/
+
 
 .location-card {
     background: var(--bg-light);
