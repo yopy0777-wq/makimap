@@ -899,6 +899,7 @@ form {
     justify-content: center;
     flex-shrink: 0;
     font-weight: bold;
+    padding: 5px;
 }
 
 .help-image-placeholder {
