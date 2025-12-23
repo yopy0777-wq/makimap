@@ -5,8 +5,6 @@ let map;
 let markers = [];
 let allLocations = [];
 let isSelectingLocation = false; //  NEW: マップ選択モードを追跡するフラグ
-let currentDetailGroup = []; // 重なっているデータのリスト
-let currentDetailIndex = 0;   // 今何番目を見ているか
 const TABLE_NAME = 'firewood_locations';
 
 const SUPABASE_URL = 'https://plmbomjfhfzpucrexqpp.supabase.co'; // ステップ1-3で確認
@@ -139,8 +137,10 @@ function initEventListeners() {
         if (e.target.id === 'detailModal') closeDetailModal();
     });
 
-    // マップから選択
+   // 🟢 新しいボタンのリスナーを追加
     document.getElementById('selectFromMapBtn').addEventListener('click', startMapSelection);
+    
+
 
     // フォーム送信
     document.getElementById('addLocationForm').addEventListener('submit', handleSubmit);
@@ -153,75 +153,61 @@ function initEventListeners() {
     document.getElementById('applyFilter').addEventListener('click', applyFilter);
     document.getElementById('clearFilter').addEventListener('click', clearFilter);
 
-    // リスト開閉
+// --- 🟢 リスト開閉のリスナーをここから差し替え ---
     const listToggleBtn = document.getElementById('listToggle');
     const listHeader = document.querySelector('.list-header');
+
+    // △ボタンとヘッダー全体、どちらを押しても toggleList が動くようにする
     [listToggleBtn, listHeader].forEach(el => {
         if (el) {
             el.addEventListener('click', (e) => {
+                // △ボタンをクリックした際、親要素（ヘッダー）のイベントも
+                // 同時に発生して「開いてすぐ閉じる」現象を防ぐ
                 e.stopPropagation();
                 toggleList();
             });
         }
     });
 
-    // 更新ボタン
     const refreshBtn = document.getElementById('refreshBtn');
-    if (refreshBtn) {
-        refreshBtn.addEventListener('click', () => {
-            const icon = refreshBtn.querySelector('i');
-            icon.classList.add('fa-spin');
-            loadLocations().finally(() => {
-                setTimeout(() => icon.classList.remove('fa-spin'), 500);
-                showToast('情報を更新しました');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', () => {
+                // アイコンを回転させる演出（任意）
+                const icon = refreshBtn.querySelector('i');
+                icon.classList.add('fa-spin');
+                
+                // データの再読み込み
+                loadLocations().finally(() => {
+                    // 読み込み完了後に回転を止める（少し遅らせると動いた感が出ます）
+                    setTimeout(() => icon.classList.remove('fa-spin'), 500);
+                    showToast('情報を更新しました');
+                });
             });
-        });
-    }
+        }
         
-    // 検索ボタン
+        // 🟢 検索ボタンのリスナーを追加
+    document.getElementById('execSearchBtn').addEventListener('click', searchAddress);
     const execSearchBtn = document.getElementById('execSearchBtn');
     if (execSearchBtn) {
         execSearchBtn.addEventListener('click', searchAddress);
     }
+}
 
-    // --- 🟢 ここから下が閉じカッコの外に出ていたので中に戻しました ---
+      // ヘルプモーダルを開く
+      document.getElementById('helpBtn').addEventListener('click', () => {
+          document.getElementById('helpModal').classList.add('active');
+          document.body.style.overflow = 'hidden';
+      });
 
-    // ヘルプモーダルを開く
-    const helpBtn = document.getElementById('helpBtn');
-    if (helpBtn) {
-        helpBtn.addEventListener('click', () => {
-            document.getElementById('helpModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-    }
+      // ヘルプモーダルを閉じる
+      const closeHelp = () => {
+          document.getElementById('helpModal').classList.remove('active');
+          document.body.style.overflow = '';
+      };
 
-    // ヘルプモーダルを閉じる
-    const closeHelp = () => {
-        document.getElementById('helpModal').classList.remove('active');
-        document.body.style.overflow = '';
-    };
+      document.getElementById('closeHelpBtn').addEventListener('click', closeHelp);
+      document.getElementById('closeHelpBtnLower').addEventListener('click', closeHelp);
 
-    const closeHelpBtn = document.getElementById('closeHelpBtn');
-    const closeHelpBtnLower = document.getElementById('closeHelpBtnLower');
-    if (closeHelpBtn) closeHelpBtn.addEventListener('click', closeHelp);
-    if (closeHelpBtnLower) closeHelpBtnLower.addEventListener('click', closeHelp);
-
-    // 🟢 追加：詳細スライドボタンのリスナーを安全に追加
-    const prevBtn = document.getElementById('prevDetailBtn');
-    const nextBtn = document.getElementById('nextDetailBtn');
-    if (prevBtn) prevBtn.addEventListener('click', () => {
-        if (currentDetailIndex > 0) {
-            currentDetailIndex--;
-            renderDetailModal();
-        }
-    });
-    if (nextBtn) nextBtn.addEventListener('click', () => {
-        if (currentDetailIndex < currentDetailGroup.length - 1) {
-            currentDetailIndex++;
-            renderDetailModal();
-        }
-    });
-} // 🔴 ここが initEventListeners の正しい閉じ位置です
 // ============================================
 // データ読み込み
 // ============================================
@@ -346,7 +332,7 @@ function displayLocationsList(locations) {
 // ============================================
 // 詳細表示
 // ============================================
-/*window.showDetail = async function(locationId) {
+window.showDetail = async function(locationId) {
     showLoading();
     
     try {
@@ -459,116 +445,7 @@ function displayLocationsList(locations) {
         hideLoading();
     }
 };
-*/
 
-window.showDetail = async function(locationId) {
-    showLoading();
-    
-    try {
-        // 1. まずクリックされたデータの詳細を取得
-        const url = `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?id=eq.${locationId}&select=*`;
-        const response = await fetch(url, {
-             headers: {
-                'apikey': SUPABASE_ANON_KEY,
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}` 
-            }
-        });
-        
-        const result = await response.json();
-        const baseLocation = result[0];
-        if (!baseLocation) throw new Error("Location not found");
-
-        // 🟢 2. 同じ座標にあるデータを allLocations からすべて抽出
-        currentDetailGroup = allLocations.filter(loc => 
-            loc.latitude === baseLocation.latitude && 
-            loc.longitude === baseLocation.longitude
-        );
-
-        // 3. 今クリックしたデータがグループの何番目にあるか探す
-        currentDetailIndex = currentDetailGroup.findIndex(loc => loc.id === locationId);
-        if (currentDetailIndex === -1) currentDetailIndex = 0;
-
-        // 4. 詳細画面の描画を実行
-        renderDetailModal();
-        openDetailModal();
-        
-    } catch (error) {
-        console.error('詳細取得エラー:', error);
-        showToast('詳細情報の取得に失敗しました', 'error');
-    } finally {
-        hideLoading();
-    }
-};
-
-// 🟢 5. 詳細モーダルの内容を描画する専用関数
-function renderDetailModal() {
-    const location = currentDetailGroup[currentDetailIndex];
-    const detailContent = document.getElementById('detailContent');
-    
-    const lastUpdate = location.updated_at 
-        ? new Date(location.updated_at).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' }) 
-        : '不明';
-    
-    // ページング情報の作成（複数ある場合のみ表示）
-    const paginationHtml = currentDetailGroup.length > 1 ? `
-        <div class="detail-pagination" style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 20px; background: #f8f8f8; padding: 10px; border-radius: 10px;">
-            <button class="btn-nav" onclick="changeDetailIndex(-1)" ${currentDetailIndex === 0 ? 'disabled' : ''} style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: ${currentDetailIndex === 0 ? '#ccc' : '#8B4513'};">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <span style="font-weight: bold;">${currentDetailIndex + 1} / ${currentDetailGroup.length} 件目</span>
-            <button class="btn-nav" onclick="changeDetailIndex(1)" ${currentDetailIndex === currentDetailGroup.length - 1 ? 'disabled' : ''} style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: ${currentDetailIndex === currentDetailGroup.length - 1 ? '#ccc' : '#8B4513'};">
-                <i class="fas fa-chevron-right"></i>
-            </button>
-        </div>
-    ` : '';
-
-    detailContent.innerHTML = `
-        ${paginationHtml}
-        <div class="detail-section">
-            <h3><i class="fas fa-store"></i> 場所名</h3>
-            <p>${location.location_name || '未設定'}</p>
-        </div>
-        <div class="detail-section">
-            <h3><i class="fas fa-tree"></i> 薪の種類</h3>
-            <p>${location.wood_type || '未設定'}</p>
-        </div>
-        <div class="detail-section">
-            <h3><i class="fas fa-yen-sign"></i> 価格</h3>
-            <p>${location.price || '未設定'}円</p>
-        </div>
-        <div class="detail-section">
-            <h3><i class="fas fa-map"></i> 位置情報</h3>
-            <p>緯度: ${location.latitude}, 経度: ${location.longitude}</p>
-        </div>
-        ${location.notes ? `
-            <div class="detail-section">
-                <h3><i class="fas fa-sticky-note"></i> 備考</h3>
-                <p style="white-space: pre-wrap;">${location.notes}</p>
-            </div>
-        ` : ''}
-        <div class="detail-section detail-actions"> 
-            <button class="btn btn-primary" onclick="focusOnMap(${location.latitude}, ${location.longitude})">
-                <i class="fas fa-map-marked-alt"></i> 地図で確認
-            </button>
-            <a href="https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}" target="_blank" class="btn btn-outline" style="margin-left: 10px;">
-                <i class="fab fa-google"></i> Googleマップ
-            </a>
-            <button class="btn btn-secondary" onclick="openEditModal('${location.id}')">
-                <i class="fas fa-edit"></i> 編集
-            </button>
-        </div>
-        <div class="detail-section">
-            <h3><i class="fas fa-history"></i> 最終更新日</h3>
-            <p>${lastUpdate}</p>
-        </div>
-    `;
-}
-
-// 🟢 6. ページ切り替え用関数
-window.changeDetailIndex = function(direction) {
-    currentDetailIndex += direction;
-    renderDetailModal();
-};
 // ============================================
 // 地図にフォーカス
 // ============================================
