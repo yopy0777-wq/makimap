@@ -415,7 +415,7 @@ function displayLocationsList(locations) {
 // ============================================
 function focusOnMarker(id, lat, lng) {
     // 1. 地図をその場所へスムーズに移動
-    map.flyTo([lat, lng], 50, {
+    map.flyTo([lat, lng], 7, {
         duration: 0.7 // 0.7秒かけて移動
     });
 
