@@ -5,8 +5,10 @@ let map;
 let markers = [];
 let allLocations = [];
 let isSelectingLocation = false; //  NEW: マップ選択モードを追跡するフラグ
-const TABLE_NAME = 'firewood_locations';
 
+let markerClusterGroup;
+
+const TABLE_NAME = 'firewood_locations';
 const SUPABASE_URL = 'https://plmbomjfhfzpucrexqpp.supabase.co'; // ステップ1-3で確認
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsbWJvbWpmaGZ6cHVjcmV4cXBwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzk5NTIsImV4cCI6MjA4MDc1NTk1Mn0.09UMcHdN2pdW7CVHb4X5WFL6obm1qw7cXdUhHS-RMC0'; // ステップ1-1で取得
 
@@ -256,7 +258,7 @@ async function loadLocations(filters = {}) {
 // ============================================
 // 地図にマーカー表示
 // ============================================
-function displayLocationsOnMap(locations) {
+/*function displayLocationsOnMap(locations) {
     // 既存のマーカーをクリア
     markers.forEach(marker => map.removeLayer(marker));
     markers = [];
@@ -294,6 +296,57 @@ function displayLocationsOnMap(locations) {
     if (markers.length > 0 && locations.length <= 50) {
         const group = L.featureGroup(markers);
         map.fitBounds(group.getBounds().pad(0.1));
+    }
+}
+*/
+
+function displayLocationsOnMap(locations) {
+    // 1. 既存のマーカーとクラスターをクリア
+    if (markerClusterGroup) {
+        map.removeLayer(markerClusterGroup);
+    }
+    markers = [];
+
+    // 2. クラスターグループを作成
+    markerClusterGroup = L.markerClusterGroup({
+        spiderfyOnMaxZoom: true, // 最大ズーム時に重なっているピンを広げる
+        showCoverageOnHover: false,
+        zoomToBoundsOnClick: true
+    });
+
+    locations.forEach(location => {
+        if (location.latitude && location.longitude) {
+            const marker = L.marker([location.latitude, location.longitude], {
+                icon: L.divIcon({
+                    className: 'custom-marker',
+                    html: '<i class="fas fa-fire"></i>',
+                    iconSize: [40, 40]
+                })
+            });
+
+            marker.bindPopup(`
+                <div style="min-width: 200px;">
+                    <h3 style="margin: 0 0 0.5rem 0; color: #8B4513; font-size: 1.1rem;">${location.location_name || '名称未設定'}</h3>
+                    <p style="margin: 0.3rem 0;"><strong>🪵 種類:</strong> ${location.wood_type || '未設定'}</p>
+                    <p style="margin: 0.3rem 0;"><strong>💰 価格:</strong> ${location.price || '未設定'}円</p>
+                    <button onclick="showDetail('${location.id}')" style="margin-top: 0.5rem; padding: 0.5rem 1rem; background: #8B4513; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100%;">
+                        詳細を見る
+                    </button>
+                </div>
+            `);
+
+            // マップではなくクラスターグループに追加
+            markerClusterGroup.addLayer(marker);
+            markers.push(marker);
+        }
+    });
+
+    // 3. クラスターグループをマップに追加
+    map.addLayer(markerClusterGroup);
+
+    // マーカーがある場合は地図を調整
+    if (markers.length > 0 && locations.length <= 50) {
+        map.fitBounds(markerClusterGroup.getBounds().pad(0.1));
     }
 }
 
