@@ -61,6 +61,12 @@ function initMap() {
         maxBoundsViscosity: 1.0 // 境界線でぴったり止まるように粘性を設定
     }).setView([defaultLat, defaultLng], defaultZoom);
 
+// 🟢 地図の移動やズームが終わった時に実行
+    map.on('moveend', () => {
+        updateListFromMap();
+    });
+
+
     // OpenStreetMapタイルレイヤー（無料）
     // 🟢 3. タイルレイヤーに noWrap: true を追加
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -245,7 +251,8 @@ async function loadLocations(filters = {}) {
         }
         
         displayLocationsOnMap(filteredLocations);
-        displayLocationsList(filteredLocations);
+        //displayLocationsList(filteredLocations);
+        updateListFromMap();
         
     } catch (error) {
         console.error('データ読み込みエラー:', error);
@@ -402,6 +409,27 @@ function displayLocationsList(locations) {
             </div>
         </div>
     `).join('');
+}
+
+
+// ============================================
+// 現在の地図の範囲内にある場所だけをリストに表示する関数
+// ============================================
+function updateListFromMap() {
+    // 1. 現在の地図の表示範囲（境界）を取得
+    const bounds = map.getBounds();
+
+    // 2. すべての場所の中から、範囲内に含まれるものだけを抽出
+    const visibleLocations = allLocations.filter(loc => {
+        if (!loc.latitude || !loc.longitude) return false;
+        
+        // 座標が現在の地図の範囲内(bounds)に含まれているか判定
+        const latLng = L.latLng(loc.latitude, loc.longitude);
+        return bounds.contains(latLng);
+    });
+
+    // 3. 抽出したリストで表示を更新
+    displayLocationsList(visibleLocations);
 }
 
 // ============================================
