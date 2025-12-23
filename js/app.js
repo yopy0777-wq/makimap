@@ -301,52 +301,74 @@ async function loadLocations(filters = {}) {
 */
 
 function displayLocationsOnMap(locations) {
-    // 1. 既存のマーカーとクラスターをクリア
+    // 既存のマーカーとクラスターをクリア
     if (markerClusterGroup) {
         map.removeLayer(markerClusterGroup);
     }
     markers = [];
 
-    // 2. クラスターグループを作成
+    // クラスターグループの作成
     markerClusterGroup = L.markerClusterGroup({
-        spiderfyOnMaxZoom: true, // 最大ズーム時に重なっているピンを広げる
+        spiderfyOnMaxZoom: true,
         showCoverageOnHover: false,
         zoomToBoundsOnClick: true
     });
 
-    locations.forEach(location => {
-        if (location.latitude && location.longitude) {
-            const marker = L.marker([location.latitude, location.longitude], {
-                icon: L.divIcon({
-                    className: 'custom-marker',
-                    html: '<i class="fas fa-fire"></i>',
-                    iconSize: [40, 40]
-                })
-            });
-
-            marker.bindPopup(`
-                <div style="min-width: 200px;">
-                    <h3 style="margin: 0 0 0.5rem 0; color: #8B4513; font-size: 1.1rem;">${location.location_name || '名称未設定'}</h3>
-                    <p style="margin: 0.3rem 0;"><strong>🪵 種類:</strong> ${location.wood_type || '未設定'}</p>
-                    <p style="margin: 0.3rem 0;"><strong>💰 価格:</strong> ${location.price || '未設定'}円</p>
-                    <button onclick="showDetail('${location.id}')" style="margin-top: 0.5rem; padding: 0.5rem 1rem; background: #8B4513; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100%;">
-                        詳細を見る
-                    </button>
-                </div>
-            `);
-
-            // マップではなくクラスターグループに追加
-            markerClusterGroup.addLayer(marker);
-            markers.push(marker);
+    // --- 🟢 同じ座標の場所をグループ化する処理 ---
+    const locationGroups = {};
+    locations.forEach(loc => {
+        if (loc.latitude && loc.longitude) {
+            const key = `${loc.latitude}_${loc.longitude}`;
+            if (!locationGroups[key]) {
+                locationGroups[key] = [];
+            }
+            locationGroups[key].push(loc);
         }
     });
 
-    // 3. クラスターグループをマップに追加
+    // --- 🟢 グループごとにマーカーを作成 ---
+    for (const key in locationGroups) {
+        const group = locationGroups[key];
+        const first = group[0];
+
+        const marker = L.marker([first.latitude, first.longitude], {
+            icon: L.divIcon({
+                className: 'custom-marker',
+                html: '<i class="fas fa-fire"></i>',
+                iconSize: [40, 40]
+            })
+        });
+
+        // ポップアップの内容を生成（複数ある場合はリスト表示）
+        let popupHtml = `<div style="min-width: 220px; max-height: 300px; overflow-y: auto;">`;
+        if (group.length > 1) {
+            popupHtml += `<p style="margin: 0 0 8px 0; font-weight: bold; border-bottom: 2px solid #8B4513;">📍 この場所に ${group.length} 件あります</p>`;
+        }
+
+        group.forEach((loc, index) => {
+            popupHtml += `
+                <div style="${index > 0 ? 'margin-top: 15px; padding-top: 10px; border-top: 1px dashed #ccc;' : ''}">
+                    <h3 style="margin: 0 0 0.5rem 0; color: #8B4513; font-size: 1.1rem;">${loc.location_name || '名称未設定'}</h3>
+                    <p style="margin: 0.3rem 0;"><strong>🪵 種類:</strong> ${loc.wood_type || '未設定'}</p>
+                    <p style="margin: 0.3rem 0;"><strong>💰 価格:</strong> ${loc.price || '未設定'}円</p>
+                    <button onclick="showDetail('${loc.id}')" style="margin-top: 0.5rem; padding: 0.5rem 1rem; background: #8B4513; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100%;">
+                        詳細を見る
+                    </button>
+                </div>
+            `;
+        });
+        popupHtml += `</div>`;
+
+        marker.bindPopup(popupHtml);
+        markerClusterGroup.addLayer(marker);
+        markers.push(marker);
+    }
+
     map.addLayer(markerClusterGroup);
 
-    // マーカーがある場合は地図を調整
     if (markers.length > 0 && locations.length <= 50) {
-        map.fitBounds(markerClusterGroup.getBounds().pad(0.1));
+        const group = L.featureGroup(markers);
+        map.fitBounds(group.getBounds().pad(0.1));
     }
 }
 
