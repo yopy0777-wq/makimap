@@ -46,6 +46,13 @@ body {
     overflow: hidden;
     position: fixed; /* iPhoneの全体スクロールを完全に殺す */
     width: 100%;
+    
+    /* 🟢 ここを追加：縦並びのレイアウトを強制する */
+    display: flex;
+    flex-direction: column;
+    font-family: 'Noto Sans JP', sans-serif;
+    color: var(--text-primary);
+    background-color: var(--bg-light);
 }
 
 .container {
@@ -61,7 +68,10 @@ body {
    ヘッダー
    ============================================ */
 header {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    flex-shrink: 0; /* ヘッダーが潰れないようにする */
+    height: 60px;
+    background-color: var(--primary-color);
+    /*background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));*/
     color: white;
     padding: 1rem 0;
     box-shadow: var(--shadow);
@@ -181,8 +191,16 @@ header h1 {
    メインコンテンツ
    ============================================ */
 main {
-    margin-top: 70px;
+    /* ヘッダーの高さ分を空ける */
+    margin-top: 60px; 
+    
+    /* 画面の高さからヘッダー分を引いた「残りすべて」をmainの高さにする */
+    height: calc(var(--vh, 1vh) * 100 - 60px);
+    
     position: relative;
+    display: flex;
+    flex-direction: column; /* 上に地図、下にリストを並べる */
+    overflow: hidden;
 }
 
 /* ============================================

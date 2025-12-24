@@ -1070,10 +1070,8 @@ function showToast(message, type = 'success') {
 }
 
 // ============================================
-// 回転対策
+// 回転対策（画面の高さ調整）
 // ============================================
-// app.js の末尾（685行目付近）
-
 function setFillHeight() {
     // ツールバーを除いた「本当の表示領域」を計算
     const vh = window.innerHeight * 0.01;
@@ -1083,3 +1081,6 @@ function setFillHeight() {
 // 画面サイズ変更時（メニューバーが出入りした時）に再計算
 window.addEventListener('resize', setFillHeight);
 window.addEventListener('orientationchange', setFillHeight);
+
+// 初期化時にも実行
+setFillHeight();
