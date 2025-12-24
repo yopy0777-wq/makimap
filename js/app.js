@@ -1085,6 +1085,7 @@ window.addEventListener('orientationchange', setFillHeight);
 // 初期化時にも実行
 setFillHeight();
 
+/*
 // ============================================
 // 一覧パネル 開閉制御（iPhone対応）
 // ============================================
@@ -1096,3 +1097,4 @@ if (listPanel && listToggle) {
         listPanel.classList.toggle('open');
     });
 }
+*/
