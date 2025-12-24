@@ -357,9 +357,9 @@ main {
     transition: transform 0.3s ease;
 }
 
-.list-panel.open {
+/*.list-panel.open {
     transform: translateY(0);
-}
+}*/
 
 
 /* 🔴 閉じている時：ヘッダーの60pxだけ残して340px分を下に下げる */
