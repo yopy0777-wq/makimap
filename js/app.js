@@ -1002,13 +1002,13 @@ function clearFilter() {
     showToast('フィルターをクリアしました', 'success');
 }
 
-/*
+
 // ============================================
 // リスト開閉
 // ============================================
 function toggleList() {
     document.getElementById('listPanel').classList.toggle('collapsed');
-}*/
+}
 
 // ============================================
 // モーダル操作
