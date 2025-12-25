@@ -74,6 +74,7 @@ header {
     /*background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));*/
     color: white;
     /*padding: 1rem 0;*/
+    margin: auto;
     box-shadow: var(--shadow);
     position: fixed;
     top: 0;
