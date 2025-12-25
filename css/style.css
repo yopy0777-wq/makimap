@@ -68,19 +68,27 @@ body {
    ヘッダー
    ============================================ */
 header {
-    flex-shrink: 0; /* ヘッダーが潰れないようにする */
-    height: 60px;
-    background-color: var(--primary-color);
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: white;
-    align-items: center; 
-    /*padding: 1rem 0;*/
+    padding: 1rem 0;
     box-shadow: var(--shadow);
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 1000;
+    /*flex-shrink: 0; /* ヘッダーが潰れないようにする */
+    height: 60px;
+    background-color: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 1rem 0;
+    box-shadow: var(--shadow);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;*/
 }
 
 header h1 {
