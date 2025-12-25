@@ -353,8 +353,8 @@ main {
     z-index: 2000;
 
     /* 初期状態：閉じている */
-    transform: translateY(340px);
-    transition: transform 0.3s ease;
+    transform: translateY(0);
+    transition: transform 0.3s ease-out;
 }
 
 .list-panel.open {
