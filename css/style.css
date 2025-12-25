@@ -69,11 +69,12 @@ body {
    ============================================ */
 header {
     flex-shrink: 0; /* ヘッダーが潰れないようにする */
-    min-height: 60px;
+    height: 60px;
     background-color: var(--primary-color);
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: white;
-    padding: 1rem 0;
+    align-items: center; 
+    /*padding: 1rem 0;*/
     box-shadow: var(--shadow);
     position: fixed;
     top: 0;
