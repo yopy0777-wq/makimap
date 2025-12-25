@@ -69,11 +69,14 @@ body {
    ============================================ */
 header {
     flex-shrink: 0; /* ヘッダーが潰れないようにする */
-    height: 60px;
+    height: 44px;      /* 60pxから44pxに（iPhoneの標準的なバーの高さに合わせる） */
+    padding: 0 15px;   /* 上下の余白(1rem)を「0」にして、左右だけ15pxにする */
+    display: flex;     /* 中身を並べる */
+    align-items: center;
     background-color: var(--primary-color);
     /*background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));*/
     color: white;
-    padding: 1rem 0;
+    /*padding: 1rem 0;*/
     box-shadow: var(--shadow);
     position: fixed;
     top: 0;
