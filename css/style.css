@@ -232,7 +232,7 @@ main {
    ============================================ */
 .filter-panel {
     position: absolute;
-    top: 20px;
+    top: 10px;
     left: 50px;
     z-index: 500;
     background: var(--bg-white);
