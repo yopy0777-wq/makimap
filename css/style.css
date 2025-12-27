@@ -371,8 +371,8 @@ main {
 .locate-btn {
     position: fixed;
     /* ズームボタンが右下にあるので、それより下、かつパネルより上の位置 */
-    bottom: 200px; 
-    right: 25px;
+    bottom: 190px; 
+    right: 20px;
     z-index: 1050;
     
     background: var(--bg-white);
@@ -392,6 +392,18 @@ main {
     /* 現在地ボタン(44px) + 下余白(40px) + 隙間(10px) = 94px */
     bottom: 30px !important; 
     right: 10px !important;
+}
+
+
+.leaflet-bottom.leaflet-right,
+.locate-btn {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* 一覧が開いている時に付与する「逃げる用」のクラス */
+.buttons-up {
+    /* パネルの高さに合わせて上に持ち上げる（300px〜340px程度） */
+    transform: translateY(-320px) !important;
 }
 
 /* ============================================
