@@ -343,37 +343,55 @@ main {
 /* ============================================
    現在地ボタン ズームボタン
    ============================================ */
-/* ズームボタン（＋/－）のコンテナ自体の位置を調整 */
-.leaflet-bottom.leaflet-right {
-    margin-right: 12px !important; /* 右端からの距離 */
-    margin-bottom: 25px !important; /* パネルに被らないよう下端から上げる */
-}
-
-/* ズームボタン内のデザインをかわいく維持 */
-.leaflet-control-zoom a {
-    border-radius: 12px !important; /* 角丸 */
+/* 1. ズームボタン（＋/－）全体の枠線を消す */
+.leaflet-bar {
     border: none !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
-    margin-bottom: 5px; /* ＋と－の間の隙間 */
+    box-shadow: none !important; /* 標準の影を消して自作の影にする */
 }
 
-/* 現在地ボタンをズームボタンの真上に配置 */
+/* 2. ＋と－のボタンそれぞれの形を丸くする */
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+    background-color: #fff !important;
+    color: var(--primary-color) !important;
+    width: 44px !important;
+    height: 44px !important;
+    line-height: 44px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px !important;
+    border-radius: 50% !important; /* 丸くする */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    margin-bottom: 8px !important; /* ボタン同士の隙間 */
+    border: none !important;
+}
+
+/* 3. 現在地ボタンの位置をズームボタンの「下」にする */
 .locate-btn {
     position: fixed;
-    /* ズームボタン(約80px) + 下の余白(25px) + 隙間(10px) = 約115px */
-    bottom: 115px; 
+    /* ズームボタンが右下にあるので、それより下、かつパネルより上の位置 */
+    bottom: 40px; 
     right: 12px;
     z-index: 1050;
     
     background: var(--bg-white);
+    color: var(--secondary-color);
     border: none !important;
-    border-radius: 50% !important; /* 現在地は丸がかわいい */
+    border-radius: 50% !important;
     width: 44px !important;
     height: 44px !important;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+}
+
+/* 4. ズームボタン自体の位置を上げる（現在地ボタンの上に持っていく） */
+.leaflet-bottom.leaflet-right {
+    /* 現在地ボタン(44px) + 下余白(40px) + 隙間(10px) = 94px */
+    bottom: 94px !important; 
+    right: 12px !important;
 }
 
 /* ============================================
