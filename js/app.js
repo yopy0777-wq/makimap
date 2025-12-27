@@ -5,7 +5,7 @@ let map;
 let markers = [];
 let allLocations = [];
 let isSelectingLocation = false; //  NEW: マップ選択モードを追跡するフラグ
-let isListCollapsed = false;
+let isListCollapsed = ture;
 let markerClusterGroup;
 
 const TABLE_NAME = 'firewood_locations';
@@ -1065,25 +1065,16 @@ function toggleList() {
     const listPanel = document.getElementById('listPanel');
     const listToggle = document.getElementById('listToggle');
     const locateBtn = document.getElementById('locateBtn');
-    // Leafletのズームコントロールの親要素を取得
-    const zoomControl = document.querySelector('.leaflet-bottom.leaflet-right');
 
     if (isListCollapsed) {
         // 【閉じる時】
         listPanel.classList.add('collapsed');
         listToggle.querySelector('i').className = 'fas fa-chevron-up';
-        
-        // ボタンを元の位置に下げる
-        if (locateBtn) locateBtn.classList.remove('buttons-up');
-        if (zoomControl) zoomControl.classList.remove('buttons-up');
     } else {
         // 【開く時】
         listPanel.classList.remove('collapsed');
         listToggle.querySelector('i').className = 'fas fa-chevron-down';
         
-        // ボタンをパネルの上に逃がす
-        if (locateBtn) locateBtn.classList.add('buttons-up');
-        if (zoomControl) zoomControl.classList.add('buttons-up');
     }
 }
 

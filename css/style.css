@@ -395,17 +395,6 @@ main {
 }
 
 
-.leaflet-bottom.leaflet-right,
-.locate-btn {
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-/* 一覧が開いている時に付与する「逃げる用」のクラス */
-.buttons-up {
-    /* パネルの高さに合わせて上に持ち上げる（300px〜340px程度） */
-    transform: translateY(-320px) !important;
-}
-
 /* ============================================
    リストパネル
    ============================================ */
@@ -1036,17 +1025,4 @@ form {
     padding: 20px;
     background: #fafafa;
     border-radius: 10px;
-}
-
-/* コピーライト表示をコンテナの動きから切り離して、画面最下部に固定する */
-.leaflet-container .leaflet-control-attribution {
-    position: fixed !important;
-    bottom: 0 !important;
-    right: 0 !important;
-    margin: 0 !important;
-    transform: none !important; /* 親の buttons-up (transform) を無視させる */
-    z-index: 1000;
-    background: rgba(255, 255, 255, 0.7) !important;
-    padding: 0 5px;
-    font-size: 10px !important;
 }
