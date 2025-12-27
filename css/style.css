@@ -1037,3 +1037,16 @@ form {
     background: #fafafa;
     border-radius: 10px;
 }
+
+/* コピーライト表示をコンテナの動きから切り離して、画面最下部に固定する */
+.leaflet-container .leaflet-control-attribution {
+    position: fixed !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    margin: 0 !important;
+    transform: none !important; /* 親の buttons-up (transform) を無視させる */
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.7) !important;
+    padding: 0 5px;
+    font-size: 10px !important;
+}
