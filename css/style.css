@@ -341,6 +341,34 @@ main {
 }
 
 /* ============================================
+   現在地ボタン
+   ============================================ */
+.locate-btn {
+    position: absolute;
+    top: 55px; /* ズームボタンやフィルターボタンと被らない高さに調整 */
+    left: 10px;
+    z-index: 1000;
+    background: var(--bg-white);
+    border: 2px solid rgba(0,0,0,0.2);
+    border-radius: 4px;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.locate-btn i {
+    font-size: 16px;
+    color: #444;
+}
+
+.locate-btn.active i {
+    color: #007bff; /* 取得中に色を変えるなどの演出用 */
+}
+
+/* ============================================
    リストパネル
    ============================================ */
 .list-panel {

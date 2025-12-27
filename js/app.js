@@ -216,6 +216,54 @@ function initEventListeners() {
       document.getElementById('closeHelpBtn').addEventListener('click', closeHelp);
       document.getElementById('closeHelpBtnLower').addEventListener('click', closeHelp);
 
+
+// app.js の initEventListeners 内に追加
+const locateBtn = document.getElementById('locateBtn');
+
+locateBtn.addEventListener('click', () => {
+    // 位置情報の使用許可を確認
+    if (!navigator.geolocation) {
+        showToast('お使いのブラウザは位置情報に対応していません', 'error');
+        return;
+    }
+
+    showLoading(); // 取得に時間がかかる場合があるのでローディングを表示
+
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            const { latitude, longitude } = position.coords;
+            const latlng = [latitude, longitude];
+
+            // 地図を現在地に移動（ズームレベル15程度が見やすいです）
+            map.setView(latlng, 15);
+
+            // 現在地に青い丸などのマーカーを置く場合
+            L.circleMarker(latlng, {
+                radius: 8,
+                fillColor: '#007bff',
+                color: '#fff',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.8
+            }).addTo(map).bindPopup("現在地").openPopup();
+
+            hideLoading();
+            showToast('現在地を取得しました');
+        },
+        (error) => {
+            hideLoading();
+            let msg = '位置情報の取得に失敗しました';
+            if (error.code === 1) msg = '位置情報の利用を許可してください';
+            showToast(msg, 'error');
+        },
+        {
+            enableHighAccuracy: true, // 高精度な位置情報を要求
+            timeout: 5000,
+            maximumAge: 0
+        }
+    );
+});
+
 // ============================================
 // データ読み込み
 // ============================================
