@@ -341,39 +341,39 @@ main {
 }
 
 /* ============================================
-   現在地ボタン
+   現在地ボタン ズームボタン
    ============================================ */
-/* style.css */
+/* ズームボタン（＋/－）のコンテナ自体の位置を調整 */
+.leaflet-bottom.leaflet-right {
+    margin-right: 12px !important; /* 右端からの距離 */
+    margin-bottom: 25px !important; /* パネルに被らないよう下端から上げる */
+}
 
+/* ズームボタン内のデザインをかわいく維持 */
+.leaflet-control-zoom a {
+    border-radius: 12px !important; /* 角丸 */
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    margin-bottom: 5px; /* ＋と－の間の隙間 */
+}
+
+/* 現在地ボタンをズームボタンの真上に配置 */
 .locate-btn {
-    position: fixed; /* absoluteからfixedに変更して画面に対して固定 */
-    /* 下から数えて、一覧パネルのヘッダーより少し上の位置に配置 */
-    bottom: 80px; 
-    right: 20px;
-    z-index: 1050; /* 一覧パネル(1001)より上に表示させる */
+    position: fixed;
+    /* ズームボタン(約80px) + 下の余白(25px) + 隙間(10px) = 約115px */
+    bottom: 115px; 
+    right: 12px;
+    z-index: 1050;
     
     background: var(--bg-white);
     border: none !important;
-    border-radius: 50% !important; /* 正円にするとより「現在地ボタン」らしくなります */
-    width: 50px !important;  /* 押しやすいように少し大きく */
-    height: 50px !important;
+    border-radius: 50% !important; /* 現在地は丸がかわいい */
+    width: 44px !important;
+    height: 44px !important;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-/* アイコンの色とサイズ */
-.locate-btn i {
-    font-size: 20px;
-    color: var(--secondary-color); /* オレンジ色系にして目立たせる */
-}
-
-/* 押した時のアニメーション */
-.locate-btn:active {
-    transform: scale(0.9);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
 }
 
 /* ============================================
