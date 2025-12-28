@@ -538,7 +538,7 @@ window.showDetail = async function(locationId) {
                padding: 0 !important; 
                cursor: pointer; 
                margin-left: auto;">
-    <i class="fas fa-flag" style="font-size: 1.5rem !important; color: #ffcccc !important;"></i> 通報
+    <i class="fas fa-flag" style="font-size: 1.5rem !important; color: #d35400 !important;"></i> 通報
 </button>
             </div>
         `;
