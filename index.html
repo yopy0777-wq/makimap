@@ -7,31 +7,19 @@
     <meta name="theme-color" content="#8B4513">
     <title>薪マップ - 薪の販売場所共有アプリ</title>
     
-    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
-    
-    <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E🪵%3C/text%3E%3C/svg%3E">
     
-    <!-- Leaflet CSS -->
+    <!-- External Libraries -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
-    
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
-    
-    
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
     
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- ヘッダー -->
     <header>
         <div class="container">
             <h1><i class="fas fa-fire"></i> 薪マップ</h1>
@@ -49,9 +37,7 @@
         </div>
     </header>
 
-    <!-- メインコンテンツ -->
     <main>
-        <!-- 地図エリア -->
         <div id="map"></div>
 
         <!-- フィルターパネル -->
@@ -128,7 +114,6 @@
                    </div>
                    <div id="searchResults" class="search-results-list"></div>
                    <small class="help-text">
-                       <!--<i class="fas fa-info-circle"></i> 検索して候補を選択すると、地図が移動します-->
                        <i class="fas fa-info-circle"></i>うまく検索できない場合は地図から探してね
                    </small>
                </div>
@@ -159,20 +144,7 @@
 
                 <div class="form-group">
                     <label for="price">価格 <span class="required">*</span></label>
-                    <input 
-                          type="number" 
-                          id="price" 
-                          class="form-control" 
-                          placeholder="例: 700 1200" 
-                          min="0" 
-                          step="1" 
-                          pattern="\d*" 
-                          required
-                      >
-                </div>
-
-                <div class="form-group">
-                   
+                    <input type="number" id="price" class="form-control" placeholder="例: 700" min="0" step="1" pattern="\d*" required>
                 </div>
 
                 <div class="form-row">
@@ -189,11 +161,9 @@
                     <button type="button" class="btn btn-outline-secondary" id="selectFromMapBtn">
                         <i class="fas fa-map-marker-alt"></i> 地図から選択
                     </button>
-                    <!---->
                     <button type="button" id="getCurrentLocation" class="btn btn-outline-secondary">
                         <i class="fas fa-location-arrow"></i> 現在地を取得
                     </button>
-                    <!---->
                 </div>
                
                 <div class="form-group">
@@ -225,64 +195,60 @@
     </div> 
 
      <!-- ヘルプモーダル -->
-<div id="helpModal" class="modal">
-    <div class="modal-content help-content">
-        <div class="modal-header">
-            <h2><i class="fas fa-question-circle"></i> 使い方マニュアル</h2>
-            <button class="close-btn" onclick="closeHelpModal()">&times;</button>
-        </div>
-        <div class="modal-body help-body">
-            <div class="manual-container">
-                <div class="manual-item">
-                    <h4>1. 地図から薪を探す</h4>
-                    <img src="img/manual1.png" alt="使い方1" class="manual-img">
-                    <p>ピンをタップすると、その場所の薪情報や詳細を確認できます。</p>
-                </div>
-                <div class="manual-item">
-                    <h4>2. 詳細画面を開く</h4>
-                    <img src="img/manual2.png" alt="使い方2" class="manual-img">
-                    <p>「詳細を見る」を押すと詳細画面が開きます。「追加登録」を押すと同じ場所で情報を追加することができます。</p>
-                </div>
-                <div class="manual-item">
-                    <h4>3. 詳細画面について</h4>
-                    <img src="img/manual3.png" alt="使い方3" class="manual-img">
-                    <p>詳細画面では価格や薪の種類、最終更新日などを確認できます。</p>
-                </div>
-                <div class="manual-item">
-                    <h4>4. 情報を編集・修正</h4>
-                    <img src="img/manual4.png" alt="使い方4" class="manual-img">
-                    <p>「編集」ボタンから、古くなった情報や間違った情報を最新に書き換えられます。</p>
-                </div>
-                <div class="manual-item">
-                    <h4>5. 新規で登録</h4>
-                    <img src="img/manual5.png" alt="使い方5" class="manual-img">
-                    <p>新規登録や登録してある一覧を参照することができます。</p>
-                </div>
-                <div class="manual-item">
-                    <h4>6. 新規登録画面について</h4>
-                    <img src="img/manual6.png" alt="使い方6" class="manual-img">
-                    <p>必要な情報を入力して、登録ボタンを押すとマップに登録されます。</p>
+    <div id="helpModal" class="modal">
+        <div class="modal-content help-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-question-circle"></i> 使い方マニュアル</h2>
+                <button class="close-btn" onclick="closeHelpModal()">&times;</button>
+            </div>
+            <div class="modal-body help-body">
+                <div class="manual-container">
+                    <div class="manual-item">
+                        <h4>1. 地図から薪を探す</h4>
+                        <img src="img/manual1.png" alt="使い方1" class="manual-img">
+                        <p>ピンをタップすると、その場所の薪情報や詳細を確認できます。</p>
+                    </div>
+                    <div class="manual-item">
+                        <h4>2. 詳細画面を開く</h4>
+                        <img src="img/manual2.png" alt="使い方2" class="manual-img">
+                        <p>「詳細を見る」を押すと詳細画面が開きます。「追加登録」を押すと同じ場所で情報を追加することができます。</p>
+                    </div>
+                    <div class="manual-item">
+                        <h4>3. 詳細画面について</h4>
+                        <img src="img/manual3.png" alt="使い方3" class="manual-img">
+                        <p>詳細画面では価格や薪の種類、最終更新日などを確認できます。</p>
+                    </div>
+                    <div class="manual-item">
+                        <h4>4. 情報を編集・修正</h4>
+                        <img src="img/manual4.png" alt="使い方4" class="manual-img">
+                        <p>「編集」ボタンから、古くなった情報や間違った情報を最新に書き換えられます。</p>
+                    </div>
+                    <div class="manual-item">
+                        <h4>5. 新規で登録</h4>
+                        <img src="img/manual5.png" alt="使い方5" class="manual-img">
+                        <p>新規登録や登録してある一覧を参照することができます。</p>
+                    </div>
+                    <div class="manual-item">
+                        <h4>6. 新規登録画面について</h4>
+                        <img src="img/manual6.png" alt="使い方6" class="manual-img">
+                        <p>必要な情報を入力して、登録ボタンを押すとマップに登録されます。</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="modal-footer">
-            <button onclick="closeHelpModal()" class="btn-primary" style="width: 100%; padding: 12px; border-radius: 8px;">閉じる</button>
+            <div class="modal-footer">
+                <button onclick="closeHelpModal()" class="btn-primary" style="width: 100%; padding: 12px; border-radius: 8px;">閉じる</button>
+            </div>
         </div>
     </div>
-</div>
 
-    <!-- ローディング -->
     <div id="loading" class="loading">
         <div class="spinner"></div>
     </div>
 
-    <!-- トースト通知 -->
     <div id="toast" class="toast"></div>
 
-    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-    <!-- Custom JS -->
     <script src="js/app.js"></script>
 </body>
 </html>

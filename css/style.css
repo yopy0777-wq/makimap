@@ -1,6 +1,4 @@
-/* ============================================
-   グローバルスタイル
-   ============================================ */
+/* グローバルスタイル */
 * {
     margin: 0;
     padding: 0;
@@ -24,30 +22,19 @@
     --shadow-lg: 0 4px 16px rgba(0,0,0,0.15);
 }
 
-/* 🟢 修正後：これに入れ替えてください */
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden; /* 全体のスクロールを禁止 */
+    overflow: hidden;
 }
 
-/*body {
-    font-family: 'Noto Sans JP', sans-serif;
-    color: var(--text-primary);
-    background-color: var(--bg-light);
-    display: flex;
-    flex-direction: column; /* ヘッダーと地図を縦に並べる */
-}*/
 body {
-    /* 100vh の代わりに計算した高さを適用 */
     height: 100vh;
     height: calc(var(--vh, 1vh) * 100);
     overflow: hidden;
-    position: fixed; /* iPhoneの全体スクロールを完全に殺す */
+    position: fixed;
     width: 100%;
-    
-    /* 🟢 ここを追加：縦並びのレイアウトを強制する */
     display: flex;
     flex-direction: column;
     font-family: 'Noto Sans JP', sans-serif;
@@ -64,9 +51,7 @@ body {
     justify-content: space-between;
 }
 
-/* ============================================
-   ヘッダー
-   ============================================ */
+/* ヘッダー */
 header {
     flex-shrink: 0;
     height: 60px;
@@ -81,9 +66,6 @@ header {
 }
 
 header .container {
-    display: flex;
-    align-items: center;              /* 上下中央 */
-    justify-content: space-between;   /* 左右に分ける */
     height: 100%;
     padding: 0 1rem;
 }
@@ -98,7 +80,7 @@ header h1 {
 
 .header-actions {
     display: flex;
-    gap: 10px; /* ボタン同士の隙間 */
+    gap: 10px;
     align-items: center;
 }
 
@@ -109,39 +91,34 @@ header h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%; /* 丸いボタンにする */
-    border: none;           /* 通常の枠線を消す */
-    outline: none;          /* クリックした時の青い枠などを消す */
-    background: transparent; /* 背景を透明にする */
-    
-    color: white;           /* アイコンの色を白にする（ヘッダーが茶色の場合） */
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: white;
     cursor: pointer;
     transition: background-color 0.2s;
     font-size: 1.4rem;
 }
 
-/* マウスを乗せた時に少し背景を明るくする（ボタンだと分かりやすくするため） */
 #refreshBtn:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* クリックした瞬間 */
 #refreshBtn:active {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* 回転アニメーション用 */
 .fa-spin {
     animation: fa-spin 1s infinite linear;
 }
+
 @keyframes fa-spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(359deg); }
 }
 
-/* ============================================
-   ボタン
-   ============================================ */
+/* ボタン */
 .btn {
     padding: 0.75rem 1.5rem;
     border: none;
@@ -176,49 +153,48 @@ header h1 {
     background-color: var(--primary-dark);
 }
 
-.btn-outline {
+.btn-outline, .btn-outline-secondary {
     background-color: transparent;
     color: var(--text-primary);
     border: 2px solid var(--border-color);
 }
 
-.btn-outline:hover {
+.btn-outline:hover, .btn-outline-secondary:hover {
     background-color: var(--bg-light);
     border-color: var(--text-secondary);
 }
 
-.btn-small {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
+.btn-help {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+    padding: 5px;
 }
 
-/* ============================================
-   メインコンテンツ
-   ============================================ */
+.btn-help:hover {
+    transform: scale(1.1);
+}
+
+/* メインコンテンツ */
 main {
-    /* ヘッダーの高さ分を空ける */
-    margin-top: 60px; 
-    
-    /* 画面の高さからヘッダー分を引いた「残りすべて」をmainの高さにする */
+    margin-top: 60px;
     height: calc(var(--vh, 1vh) * 100 - 60px);
-    
     position: relative;
     display: flex;
-    flex-direction: column; /* 上に地図、下にリストを並べる */
+    flex-direction: column;
     overflow: hidden;
 }
 
-/* ============================================
-   地図
-   ============================================ */
+/* 地図 */
 #map {
     height: calc(100vh - 70px);
     width: 100%;
     position: relative;
 }
 
-/* Leaflet カスタムマーカー */
 .custom-marker {
     background-color: var(--primary-color);
     border: 3px solid white;
@@ -233,9 +209,7 @@ main {
     box-shadow: var(--shadow);
 }
 
-/* ============================================
-   フィルターパネル
-   ============================================ */
+/* フィルターパネル */
 .filter-panel {
     position: absolute;
     top: 13px;
@@ -283,49 +257,23 @@ main {
     color: var(--text-primary);
 }
 
-.filter-group input {
+.filter-group input,
+.filter-group select {
     width: 100%;
     padding: 0.75rem;
     border: 2px solid var(--border-color);
     border-radius: 8px;
     font-size: 1rem;
     font-family: 'Noto Sans JP', sans-serif;
-}
-
-.filter-group input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-}
-
-#applyFilter {
-    width: 100%;
-    margin-bottom: 0.5rem;
-}
-
-#clearFilter {
-    width: 100%;
-}
-
-/* フィルター内の入力欄とセレクトボックスを共通化 */
-.filter-group input,
-.filter-group select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 2px solid var(--border-color);
-    border-radius: 8px; /* フォーム側と合わせた角の丸み */
-    font-size: 1rem;
-    font-family: 'Noto Sans JP', sans-serif; /* */
     background-color: var(--bg-white);
     color: var(--text-primary);
     transition: border-color 0.3s ease;
 }
 
-/* フィルターのセレクトボックス専用設定（矢印の追加） */
 .filter-group select {
     appearance: none;
     -webkit-appearance: none;
     cursor: pointer;
-    /* モダンな下向き矢印アイコンを背景として配置 */
     background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
     background-repeat: no-repeat;
     background-position: right 12px center;
@@ -333,23 +281,23 @@ main {
     padding-right: 40px;
 }
 
-/* フォーカス時の色 */
 .filter-group input:focus,
 .filter-group select:focus {
     outline: none;
     border-color: var(--primary-color);
 }
 
-/* ============================================
-   現在地ボタン ズームボタン
-   ============================================ */
-/* 1. ズームボタン（＋/－）全体の枠線を消す */
-.leaflet-bar {
-    border: none !important;
-    box-shadow: none !important; /* 標準の影を消して自作の影にする */
+#applyFilter, #clearFilter {
+    width: 100%;
+    margin-bottom: 0.5rem;
 }
 
-/* 2. ＋と－のボタンそれぞれの形を丸くする */
+/* 現在地・ズームボタン */
+.leaflet-bar {
+    border: none !important;
+    box-shadow: none !important;
+}
+
 .leaflet-control-zoom-in,
 .leaflet-control-zoom-out {
     background-color: #fff !important;
@@ -361,20 +309,17 @@ main {
     align-items: center;
     justify-content: center;
     font-size: 20px !important;
-    border-radius: 50% !important; /* 丸くする */
+    border-radius: 50% !important;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
-    margin-bottom: 8px !important; /* ボタン同士の隙間 */
+    margin-bottom: 8px !important;
     border: none !important;
 }
 
-/* 3. 現在地ボタンの位置をズームボタンの「下」にする */
 .locate-btn {
     position: fixed;
-    /* ズームボタンが右下にあるので、それより下、かつパネルより上の位置 */
-    bottom: 190px; 
+    bottom: 190px;
     right: 20px;
     z-index: 1050;
-    
     background: var(--bg-white);
     color: var(--secondary-color);
     border: none !important;
@@ -385,45 +330,30 @@ main {
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    cursor: pointer;
 }
 
-/* 4. ズームボタン自体の位置を上げる（現在地ボタンの上に持っていく） */
 .leaflet-bottom.leaflet-right {
-    /* 現在地ボタン(44px) + 下余白(40px) + 隙間(10px) = 94px */
-    bottom: 30px !important; 
+    bottom: 30px !important;
     right: 10px !important;
 }
 
-
-/* ============================================
-   リストパネル
-   ============================================ */
+/* リストパネル */
 .list-panel {
     position: fixed;
     left: 0;
     right: 0;
-
-    /*  iOSでも狂わない下基準 */
     bottom: 0;
     padding-bottom: env(safe-area-inset-bottom);
-
     height: 400px;
     background: var(--bg-white);
     border-radius: 20px 20px 0 0;
     box-shadow: 0 -4px 16px rgba(0,0,0,0.15);
     z-index: 2000;
-
-    /* 初期状態：閉じている */
     transform: translateY(0);
     transition: transform 0.3s ease-out;
 }
 
-.list-panel.open {
-    transform: translateY(0);
-}
-
-
-/*  閉じている時：ヘッダーの60pxだけ残して340px分を下に下げる */
 .list-panel.collapsed {
     transform: translateY(340px) !important;
 }
@@ -440,7 +370,6 @@ main {
     cursor: pointer;
     background: var(--bg-white);
     border-radius: 20px 20px 0 0;
-    /* タップ時の青い枠を消す */
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -448,8 +377,7 @@ main {
     z-index: 1;
     padding: 1rem;
     overflow-y: auto;
-    /* ヘッダー分を引いた高さ */
-    height: 340px; 
+    height: 340px;
     -webkit-overflow-scrolling: touch;
 }
 
@@ -461,10 +389,6 @@ main {
     gap: 0.5rem;
 }
 
-.list-toggle i {
-    pointer-events: none;
-}
-
 .list-toggle {
     background: none;
     border: none;
@@ -472,6 +396,10 @@ main {
     color: var(--text-secondary);
     cursor: pointer;
     transition: transform 0.3s ease;
+}
+
+.list-toggle i {
+    pointer-events: none;
 }
 
 .list-panel.collapsed .list-toggle {
@@ -526,9 +454,19 @@ main {
     color: var(--primary-color);
 }
 
-/* ============================================
-   モーダル
-   ============================================ */
+.empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-light);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+/* モーダル */
 .modal {
     display: none;
     position: fixed;
@@ -602,9 +540,7 @@ main {
     transform: scale(1.2);
 }
 
-/* ============================================
-   フォーム
-   ============================================ */
+/* フォーム */
 form {
     padding: 1.5rem;
 }
@@ -619,7 +555,7 @@ form {
     gap: 1rem;
 }
 
-.form-group label {
+.form-group label, .form-label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
@@ -631,7 +567,9 @@ form {
 }
 
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select,
+.form-control {
     width: 100%;
     padding: 0.75rem;
     border: 2px solid var(--border-color);
@@ -641,51 +579,118 @@ form {
     transition: border-color 0.3s ease;
 }
 
+.form-group select,
+.form-control select {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    background-color: var(--bg-white);
+    background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
 .form-group input:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.form-group select:focus {
     outline: none;
     border-color: var(--primary-color);
 }
 
-.form-actions {
+.form-actions, .form-actions-coordinate {
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
     margin-top: 2rem;
 }
 
-/* ドロップダウン(select)をinputと同じ見た目にする */
-.form-group select {
+.form-actions-coordinate {
+    margin-top: 0.5rem;
+    justify-content: flex-start;
+}
+
+/* 住所検索 */
+.search-outer-container {
     width: 100%;
-    padding: 0.75rem;
-    border: 2px solid var(--border-color);
-    border-radius: 8px; /* 角の丸みをinputと合わせる */
-    font-size: 1rem;
-    font-family: 'Noto Sans JP', sans-serif;
-    background-color: var(--bg-white);
-    color: var(--text-primary);
-    cursor: pointer;
-    transition: border-color 0.3s ease;
-    
-    /* ブラウザ標準の矢印を消して、少しモダンな矢印にするための設定 */
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 16px;
-    padding-right: 40px; /* 矢印と文字が重ならないように */
+    background-color: transparent;
+    margin-bottom: 20px;
 }
 
-/* フォーカスした時（クリックした時）の枠線 */
-.form-group select:focus {
+.search-flex-box {
+    display: flex;
+    gap: 0;
+    width: 100%;
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+}
+
+.search-flex-box .form-control {
+    border: none !important;
+    flex: 1;
+    padding: 12px;
     outline: none;
-    border-color: var(--primary-color);
+    box-shadow: none;
+    min-width: 0;
 }
 
-/* ============================================
-   詳細表示
-   ============================================ */
+.search-flex-box .btn-secondary {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 0;
+    padding: 0 15px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.search-flex-box .btn-secondary:hover {
+    background-color: var(--primary-dark);
+}
+
+.search-results-list {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-top: none;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+    box-shadow: var(--shadow);
+}
+
+.search-result-item {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+}
+
+.search-result-item:hover {
+    background-color: #fff9f5;
+}
+
+.help-text {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    display: block;
+    margin-top: 6px;
+}
+
+.form-divider {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 15px 0;
+}
+
+/* 詳細表示 */
 #detailContent {
     padding: 1.5rem;
 }
@@ -710,9 +715,121 @@ form {
     line-height: 1.6;
 }
 
-/* ============================================
-   ローディング
-   ============================================ */
+.detail-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* ヘルプモーダル */
+#helpModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+#helpModal.active {
+    display: flex !important;
+}
+
+.help-content {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    border-radius: 10px;
+    overflow-y: auto;
+    position: relative;
+}
+
+.help-body {
+    max-height: 65vh;
+    overflow-y: auto;
+    padding: 15px !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+.manual-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.manual-item {
+    border-bottom: 1px dashed #eee;
+    padding-bottom: 20px;
+}
+
+.manual-item:last-child {
+    border-bottom: none;
+}
+
+.manual-item h4 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.manual-img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-bottom: 10px;
+    border: 1px solid #f0f0f0;
+}
+
+.manual-item p {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.6;
+}
+
+.modal-footer {
+    padding: 15px;
+    border-top: 1px solid #eee;
+}
+
+/* 追加機能 */
+.btn-copy-add {
+    background-color: #e67e22 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 6px;
+    padding: 8px;
+    width: 100%;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-copy-add:hover {
+    background-color: #d35400 !important;
+}
+
+body.selecting-mode .leaflet-marker-icon,
+body.selecting-mode .leaflet-marker-shadow,
+body.selecting-mode .leaflet-markercluster {
+    pointer-events: none !important;
+    opacity: 0.6 !important;
+}
+
+/* ローディング */
 .loading {
     display: none;
     position: fixed;
@@ -744,9 +861,7 @@ form {
     100% { transform: rotate(360deg); }
 }
 
-/* ============================================
-   トースト通知
-   ============================================ */
+/* トースト通知 */
 .toast {
     position: fixed;
     bottom: 20px;
@@ -773,6 +888,10 @@ form {
     background-color: var(--danger-color);
 }
 
+.toast.info {
+    background-color: #2196F3;
+}
+
 @keyframes toastSlideIn {
     from {
         opacity: 0;
@@ -784,9 +903,7 @@ form {
     }
 }
 
-/* ============================================
-   レスポンシブデザイン
-   ============================================ */
+/* レスポンシブデザイン */
 @media (max-width: 768px) {
     header h1 {
         font-size: 1.2rem;
@@ -795,16 +912,6 @@ form {
     .btn {
         padding: 0.6rem 1rem;
         font-size: 0.9rem;
-    }
-
-    .list-panel {
-        height: 400px;
-    }
-
-    .list-content {
-        height: 340px;      /* 400 - ヘッダー60 */
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
     }
 
     .form-row {
@@ -847,278 +954,11 @@ form {
     }
 }
 
-/* ============================================
-   ユーティリティクラス
-   ============================================ */
-.text-center {
-    text-align: center;
-}
-
+/* ユーティリティクラス */
+.text-center { text-align: center; }
 .mt-1 { margin-top: 0.5rem; }
 .mt-2 { margin-top: 1rem; }
 .mt-3 { margin-top: 1.5rem; }
-
 .mb-1 { margin-bottom: 0.5rem; }
 .mb-2 { margin-bottom: 1rem; }
 .mb-3 { margin-bottom: 1.5rem; }
-
-.empty-state {
-    text-align: center;
-    padding: 2rem;
-    color: var(--text-light);
-}
-
-.empty-state i {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    display: block;
-}
-
-
-/* ============================================
-   住所検索（デザイン統一版）
-   ============================================ */
-
-.search-outer-container {
-    width: 100%;
-    background-color: transparent; /* 背景を白に馴染ませる */
-    margin-bottom: 20px;
-    box-sizing: border-box;
-}
-
-/* 入力欄とボタンを一体化させる */
-.search-flex-box {
-    display: flex;
-    gap: 0; 
-    width: 100%;
-    border: 2px solid var(--primary-color); /* 薪の茶色で囲む */
-    border-radius: 8px;
-    overflow: hidden; /* 角丸からはみ出さないように */
-    background: white;
-}
-
-.search-flex-box .form-control {
-    border: none !important; /* 既存の枠線を消す */
-    flex: 1;
-    padding: 12px;
-    outline: none;
-    box-shadow: none;
-    min-width: 0; /* 突き抜け防止 */
-}
-
-.search-flex-box .btn-secondary {
-    background-color: var(--primary-color); /* ボタンを茶色に */
-    color: white;
-    border: none;
-    border-radius: 0;
-    padding: 0 15px;
-    cursor: pointer;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
-}
-
-.search-flex-box .btn-secondary:hover {
-    background-color: var(--primary-dark);
-}
-
-/* 検索結果リストをスッキリさせる */
-.search-results-list {
-    background: white;
-    border: 1px solid var(--border-color);
-    border-top: none;
-    max-height: 200px;
-    overflow-y: auto;
-    width: 100%;
-    box-sizing: border-box;
-    box-shadow: var(--shadow);
-}
-
-.search-result-item {
-    padding: 10px 12px;
-    border-bottom: 1px solid #f0f0f0;
-    cursor: pointer;
-    font-size: 0.85rem;
-    color: var(--text-primary);
-}
-
-.search-result-item:hover {
-    background-color: #fff9f5; /* ほんのり茶色系の背景 */
-}
-
-.help-text {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    display: block;
-    margin-top: 6px;
-}
-
-/* 区切り線も馴染ませる */
-.form-divider {
-    border: 0;
-    border-top: 1px solid #eee;
-    margin: 15px 0;
-}
-
-
-/* ============================================
-   ヘルプ
-   ============================================ */
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.btn-help {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: transform 0.2s;
-    padding: 5px;
-}
-
-.btn-help:hover {
-    transform: scale(1.1);
-}
-/* ヘルプモーダル専用のスクロール設定 */
-#helpModal {
-    display: none; /* 通常は非表示 */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.6);
-    z-index: 2000;
-
-    /* 🟢 これが真ん中に配置する設定 */
-    justify-content: center; /* 左右中央 */
-    align-items: center;     /* 上下中央 */
-}
-
-/* JavaScriptで active クラスをつけた時に flex に切り替える */
-#helpModal.active {
-    display: flex !important;
-}
-
-/* モーダルの白い箱 */
-.help-content {
-    background: white;
-    width: 90%;
-    max-width: 500px;
-    max-height: 80vh; /* 画面の高さの8割までに制限 */
-    border-radius: 10px;
-    overflow-y: auto; /* 6枚の画像が溢れたら中だけスクロール */
-    position: relative; /* 閉じるボタンの基準にするため */
-}
-
-.help-body {
-    max-height: 65vh; /* 画面の高さの65%までに制限 */
-    overflow-y: auto; /* 縦スクロールを有効に */
-    padding: 15px !important;
-    -webkit-overflow-scrolling: touch; /* iPhoneでのスクロールを滑らかに */
-}
-
-.manual-container {
-    display: flex;
-    flex-direction: column;
-    gap: 30px; /* 各項目の間隔を広げて見やすく */
-}
-
-.manual-item {
-    border-bottom: 1px dashed #eee; /* 項目ごとの区切り線 */
-    padding-bottom: 20px;
-}
-
-.manual-item:last-child {
-    border-bottom: none;
-}
-
-.manual-item h4 {
-    color: var(--primary-color);
-    margin-bottom: 10px;
-    font-size: 1.1rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.manual-img {
-    width: 100%;
-    height: auto;
-    border-radius: 12px; /* 画像の角を丸くして可愛く */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* 軽い影 */
-    margin-bottom: 10px;
-    border: 1px solid #f0f0f0;
-}
-
-.manual-item p {
-    font-size: 0.9rem;
-    color: #666;
-    line-height: 1.6;
-}
-
-/* ============================================
-   追加機能：ボタン装飾と選択モード設定
-   ============================================ */
-
-/* 1. ポップアップ内の「ここに追加登録」ボタン */
-.btn-copy-add {
-    background-color: #e67e22 !important; /* 薪をイメージしたオレンジ */
-    color: white !important;
-    border: none !important;
-    border-radius: 6px;
-    padding: 8px;
-    width: 100%;
-    font-size: 13px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.btn-copy-add:hover {
-    background-color: #d35400 !important;
-}
-
-/* 2. 地図から選択モード中のピン透過設定 */
-/* これにより、ピンの真下にある地図をクリックできるようになります */
-body.selecting-mode .leaflet-marker-icon,
-body.selecting-mode .leaflet-marker-shadow,
-body.selecting-mode .leaflet-markercluster {
-    pointer-events: none !important; /* クリックを透過させる */
-    opacity: 0.6 !important;         /* 選択中だとわかるように少し薄くする */
-}
-
-}
-
-/* ============================================
-   通報ボタン
-   ============================================ */
-.btn-report-flag {
-    background: transparent !important;
-    border: none !important;
-    padding: 8px !important;
-    cursor: pointer;
-    font-size: 2rem;
-    transition: transform 0.2s ease, color 0.2s ease;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-/* 🟢 ここでアイコンの大きさを強制指定 */
-.btn-report-flag i {
-    font-size: 1.5rem !important;
-
-.btn-report-flag:hover {
-    transform: scale(1.2); /* 少し大きくして斜めにする（かわいい動き） */
-}
