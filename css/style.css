@@ -1068,7 +1068,7 @@ body.selecting-mode .leaflet-markercluster {
    通報ボタン
    ============================================ */
 .btn-report-flag {
-    background: none !important;
+    background: transparent !important;
     border: none !important;
     padding: 8px !important;
     cursor: pointer;
@@ -1082,7 +1082,6 @@ body.selecting-mode .leaflet-markercluster {
 /* 🟢 ここでアイコンの大きさを強制指定 */
 .btn-report-flag i {
     font-size: 1.5rem !important;
-    color: #d35400 !important;
 
 .btn-report-flag:hover {
     transform: scale(1.2); /* 少し大きくして斜めにする（かわいい動き） */
