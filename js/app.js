@@ -490,7 +490,7 @@ window.showDetail = async function(locationId) {
             <div class="detail-section">
                 <h3><i class="fas fa-store"></i> 場所名</h3>
                 <p>${location.location_name || '未設定'}</p>
-                ${reportStatusHtml} </div>
+            </div>
             
             <div class="detail-section">
                 <h3><i class="fas fa-tree"></i> 薪の種類</h3>
