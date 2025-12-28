@@ -266,19 +266,17 @@ locateBtn.addEventListener('click', () => {
 // ============================================
 async function loadLocations(filters = {}) {
     showLoading();
-    
     try {
-        let url = `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?select=*`;
+        // 🟢 通報が5回未満(lt.5)のものだけを取得する条件を追加
+        let url = `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?select=*&report_count=lt.5`;
         
         if (filters.search) {
-            url += `&search=${encodeURIComponent(filters.search)}`;
+            url += `&location_name=ilike.*${encodeURIComponent(filters.search)}*`;
         }
         
         const response = await fetch(url, {
-            // --- 認証キーをヘッダーに追加 ---
             headers: {
                 'apikey': SUPABASE_ANON_KEY,
-                //  読み込みにも Authorization を追加
                 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
             }
         });
@@ -286,9 +284,8 @@ async function loadLocations(filters = {}) {
         
         allLocations = result || [];
         
-        // クライアントサイドでフィルタリング
+        // フィルタリング処理...
         let filteredLocations = allLocations;
-        
         if (filters.woodType) {
             filteredLocations = filteredLocations.filter(loc => 
                 loc.wood_type && loc.wood_type.toLowerCase().includes(filters.woodType.toLowerCase())
@@ -296,7 +293,6 @@ async function loadLocations(filters = {}) {
         }
         
         displayLocationsOnMap(filteredLocations);
-        //displayLocationsList(filteredLocations);
         updateListFromMap();
         
     } catch (error) {
@@ -466,10 +462,8 @@ window.showDetail = async function(locationId) {
     showLoading();
     
     try {
-        //  データを取得するためのURLを構築
         const url = `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?id=eq.${locationId}&select=*`;
         
-        //  Supabaseへの fetch リクエスト
         const response = await fetch(url, {
              headers: {
                 'apikey': SUPABASE_ANON_KEY,
@@ -477,35 +471,31 @@ window.showDetail = async function(locationId) {
             }
         });
         
-        //  レスポンスが成功したかチェック
-        if (!response.ok) {
-            // サーバーからエラーが返された場合
-            const errorBody = await response.text();
-            console.error('APIエラーレスポンス:', errorBody);
-            throw new Error(`詳細の取得に失敗しました: ${response.status} ${response.statusText}`);
-        }
+        if (!response.ok) throw new Error(`詳細の取得に失敗しました`);
 
         const result = await response.json();
         const location = result[0];
-        
         if (!location) throw new Error("Location not found");
 
         const detailContent = document.getElementById('detailContent');
         
-        // window.showDetail 内の修正
         const lastUpdate = location.updated_at 
             ? new Date(location.updated_at).toLocaleDateString('ja-JP', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit'
-            }) 
-            : '不明';
+                year: 'numeric', month: '2-digit', day: '2-digit'
+            }) : '不明';
+
+        // 🟢 通報状態のテキスト（5回以上なら「非表示中」と表示）
+        const reportCount = location.report_count || 0;
+        const reportStatusHtml = reportCount > 0 
+            ? `<p style="color: var(--danger-color); font-size: 0.8rem;">
+                <i class="fas fa-exclamation-circle"></i> この情報は現在 ${reportCount} 回通報されています。
+               </p>` : '';
         
         detailContent.innerHTML = `
             <div class="detail-section">
                 <h3><i class="fas fa-store"></i> 場所名</h3>
                 <p>${location.location_name || '未設定'}</p>
-            </div>
+                ${reportStatusHtml} </div>
             
             <div class="detail-section">
                 <h3><i class="fas fa-tree"></i> 薪の種類</h3>
@@ -517,26 +507,10 @@ window.showDetail = async function(locationId) {
                 <p>${location.price || '未設定'}円</p>
             </div>
             
-            <!--
-            ${location.address ? `
-                <div class="detail-section">
-                    <h3><i class="fas fa-map-marker-alt"></i> 住所</h3>
-                    <p>${location.address}</p>
-                </div>
-            ` : ''}-->
-            
             <div class="detail-section">
                 <h3><i class="fas fa-map"></i> 位置情報</h3>
                 <p>緯度: ${location.latitude}, 経度: ${location.longitude}</p>
             </div>
-            
-            <!--
-            ${location.contact ? `
-                <div class="detail-section">
-                    <h3><i class="fas fa-phone"></i> 連絡先</h3>
-                    <p>${location.contact}</p>
-                </div>
-            ` : ''}-->
             
             ${location.notes ? `
                 <div class="detail-section">
@@ -547,23 +521,22 @@ window.showDetail = async function(locationId) {
             
             <div class="detail-section detail-actions"> 
                 <button class="btn btn-primary" onclick="focusOnMap(${location.latitude}, ${location.longitude})">
-                    <i class="fas fa-map-marked-alt"></i> 地図で確認
+                    <i class="fas fa-map-marked-alt"></i> 地図
                 </button>
-                
-                <a href="https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}" target="_blank" class="btn btn-outline" style="margin-left: 10px;">
-                    <i class="fab fa-google"></i> Googleマップで開く
-                </a>
                 
                 <button class="btn btn-secondary" onclick="openEditModal('${location.id}')">
                     <i class="fas fa-edit"></i> 編集
                 </button>
+
+                <button class="btn btn-report" onclick="window.reportLocation('${location.id}')" style="background: none; border: 1px solid #ccc; color: #666; margin-left: auto;">
+                    <i class="fas fa-flag"></i> 通報
+                </button>
             </div>
             
             <div class="detail-section">
-                            <h3><i class="fas fa-history"></i> 最終更新日</h3>
+                <h3><i class="fas fa-history"></i> 最終更新日</h3>
                 <p>${lastUpdate}</p>
             </div>
-
         `;
         
         openDetailModal();
@@ -700,6 +673,47 @@ async function handleSubmit(e) {
         hideLoading();
     }
 }
+
+// ============================================
+// 通報関数
+// ============================================
+window.reportLocation = async function(id) {
+    if (!confirm('この情報を不適切な内容として通報しますか？\n一定数の通報で自動的に非表示になります。')) return;
+
+    showLoading();
+    try {
+        // 現在のデータを特定
+        const target = allLocations.find(loc => String(loc.id) === String(id));
+        const currentCount = target ? (target.report_count || 0) : 0;
+
+        // パッチリクエストでカウントを+1する
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}?id=eq.${id}`, {
+            method: 'PATCH',
+            headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({ report_count: currentCount + 1 })
+        });
+
+        if (!response.ok) throw new Error('通報に失敗しました');
+
+        showToast('通報ありがとうございます。');
+        
+        // カウントが5に達した、もしくは現在詳細を見ているなら再読み込みして消す
+        if (currentCount + 1 >= 5) {
+            closeDetailModal();
+            loadLocations(); 
+        }
+    } catch (error) {
+        console.error('通報エラー:', error);
+        showToast('エラーが発生しました', 'error');
+    } finally {
+        hideLoading();
+    }
+};
 
 // ============================================
 // 編集モーダル操作
