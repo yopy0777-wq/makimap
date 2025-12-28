@@ -1061,3 +1061,5 @@ body.selecting-mode .leaflet-markercluster {
     pointer-events: none !important; /* クリックを透過させる */
     opacity: 0.6 !important;         /* 選択中だとわかるように少し薄くする */
 }
+
+}

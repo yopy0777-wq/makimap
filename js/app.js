@@ -368,9 +368,11 @@ function displayLocationsOnMap(locations) {
                 </div>
             `;
         });
+        
+        const escapedName = (first.location_name || '').replace(/'/g, "\\'");
         popupHtml += `
             <hr style="margin: 12px 0 8px; border: 0; border-top: 1px solid #eee;">
-            <button onclick="addAtThisLocation(${first.latitude}, ${first.longitude})" class="btn-copy-add">
+            <button onclick="window.addAtThisLocation(${first.latitude}, ${first.longitude}, '${escapedName}')" class="btn-copy-add">
                 <i class="fas fa-plus-circle"></i> この場所に追加登録
             </button>
         </div>`;
@@ -702,27 +704,43 @@ async function handleSubmit(e) {
 // ============================================
 // 手順1: 既存のピンから座標を引き継いで登録画面を開く
 // ============================================
-window.addAtThisLocation = function(lat, lng) {
-    document.body.classList.remove('selecting-mode');
-    isSelectingLocation = false;
-    // 1. まず新規登録モーダルを開く
+window.addAtThisLocation = function(lat, lng, name) {
+    console.log("addAtThisLocation called with:", lat, lng, name);
+    
+    // 登録モーダルを開く
     if (typeof openAddModal === 'function') {
         openAddModal();
     } else {
-        // 関数が見つからない場合の予備処理
-        document.getElementById('addModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
+        const modal = document.getElementById('addModal');
+        if (modal) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
     }
 
-    // 2. 座標を入力欄にセットする
+    // 各入力欄を取得
     const latInput = document.getElementById('latitude');
     const lngInput = document.getElementById('longitude');
+    const nameInput = document.getElementById('locationName'); 
     
+    // 座標をセット
     if (latInput && lngInput) {
-        latInput.value = lat.toFixed(6);
-        lngInput.value = lng.toFixed(6);
-        showToast('既存の場所から座標を取得しました', 'success');
+        latInput.value = Number(lat).toFixed(6);
+        lngInput.value = Number(lng).toFixed(6);
     }
+    
+    // 🟢 場所の名前をセット
+    if (nameInput && name) {
+        nameInput.value = name;
+    }
+
+    if (typeof showToast === 'function') {
+        showToast('場所の情報を引き継ぎました', 'success');
+    }
+    
+    // 透過モードを念のため解除
+    document.body.classList.remove('selecting-mode');
+    isSelectingLocation = false;
 };
 
 // ============================================
@@ -1089,7 +1107,7 @@ function toggleList() {
 }
 
 // ============================================
-// モーダル操作
+// モーダル操作 開閉
 // ============================================
 function openAddModal() {
     const form = document.getElementById('addLocationForm');
@@ -1108,11 +1126,6 @@ function openAddModal() {
     document.body.style.overflow = 'hidden';
 }
 
-/*function closeAddModal() {
-    // リスナーの切り替えは openAddModal と openEditModal に任せるため、ここはシンプルに戻す
-    document.getElementById('addModal').classList.remove('active');
-    document.body.style.overflow = '';
-}*/
 function closeAddModal() {
     const modal = document.getElementById('addModal');
     if (modal) {
