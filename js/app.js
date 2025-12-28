@@ -1010,29 +1010,6 @@ async function searchAddress() {
 // initEventListeners に以下を追加してください
 // document.getElementById('execSearchBtn').addEventListener('click', searchAddress);
 
-// ============================================
-// 手順1: 既存のピンから座標を引き継いで登録画面を開く
-// ============================================
-window.addAtThisLocation = function(lat, lng) {
-    // 1. まず新規登録モーダルを開く
-    if (typeof openAddModal === 'function') {
-        openAddModal();
-    } else {
-        // 関数が見つからない場合の予備処理
-        document.getElementById('addModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-
-    // 2. 座標を入力欄にセットする
-    const latInput = document.getElementById('latitude');
-    const lngInput = document.getElementById('longitude');
-    
-    if (latInput && lngInput) {
-        latInput.value = lat.toFixed(6);
-        lngInput.value = lng.toFixed(6);
-        showToast('既存の場所から座標を取得しました', 'success');
-    }
-};
 
 // ============================================
 // フィルター関連
@@ -1172,12 +1149,27 @@ if (listPanel && listToggle) {
     });
 }
 
+
 // ============================================
-// 既存の場所から位置取得
+// 手順1: 既存のピンから座標を引き継いで登録画面を開く
 // ============================================
 window.addAtThisLocation = function(lat, lng) {
-    openAddModal(); // フォームをリセットして開く
-    document.getElementById('latitude').value = lat.toFixed(6);
-    document.getElementById('longitude').value = lng.toFixed(6);
-    showToast('既存の場所から座標を取得しました', 'success');
+    // 1. まず新規登録モーダルを開く
+    if (typeof openAddModal === 'function') {
+        openAddModal();
+    } else {
+        // 関数が見つからない場合の予備処理
+        document.getElementById('addModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // 2. 座標を入力欄にセットする
+    const latInput = document.getElementById('latitude');
+    const lngInput = document.getElementById('longitude');
+    
+    if (latInput && lngInput) {
+        latInput.value = lat.toFixed(6);
+        lngInput.value = lng.toFixed(6);
+        showToast('既存の場所から座標を取得しました', 'success');
+    }
 };
