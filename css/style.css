@@ -1071,7 +1071,7 @@ body.selecting-mode .leaflet-markercluster {
     background: none !important;
     border: none !important;
     padding: 8px !important;
-    color: #ddd !important; /* 最初はとても薄いグレー */
+    color: #d35400 !important; /* 最初はとても薄いグレー */
     cursor: pointer;
     font-size: 2rem;
     transition: transform 0.2s ease, color 0.2s ease;
