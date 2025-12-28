@@ -1082,7 +1082,7 @@ body.selecting-mode .leaflet-markercluster {
 }
 /* 🟢 ここでアイコンの大きさを強制指定 */
 .btn-report-flag i {
-    font-size: 2.5rem !important;      /* 2remから2.5remへさらに大きく */
+    font-size: 1.5rem !important;      /* 2remから2.5remへさらに大きく */
 
 .btn-report-flag:hover {
     transform: scale(1.2); /* 少し大きくして斜めにする（かわいい動き） */
