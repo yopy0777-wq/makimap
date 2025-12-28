@@ -1204,7 +1204,7 @@ if (listPanel && listToggle) {
 window.openHelpModal = function() {
     const modal = document.getElementById('helpModal');
     if (modal) {
-        modal.classList.add('active'); // CSS側の flex 設定を動かす
+        modal.classList.add('active'); // CSSの中央配置(flex)を有効にする
         document.body.style.overflow = 'hidden';
     }
 };
