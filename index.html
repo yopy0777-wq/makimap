@@ -225,34 +225,51 @@
     </div> 
 
      <!-- ヘルプモーダル -->
-     <div id="helpModal" class="modal">
-         <div class="modal-content help-content">
-             <div class="modal-header">
-                 <h2><i class="fas fa-book-open"></i> 薪マップの使い方</h2>
-                 <button class="close-btn" id="closeHelpBtn">
-                     <i class="fas fa-times"></i>
-                 </button>
-             </div>
-             <div class="help-body">
-                 <div class="help-step">
-                     <span class="step-number">1</span>
-                     <p><strong>薪を探す：</strong> 地図を動かしたり、フィルター機能から薪の販売場所を探せます。</p>
-                 </div>
-                 <div class="help-step">
-                     <span class="step-number">2</span>
-                     <p><strong>詳細を見る：</strong> 地図上の🪵マークをタップすると、価格や薪の種類を確認できます。</p>
-                 </div>
-                 <div class="help-step">
-                     <span class="step-number">3</span>
-                     <p><strong>場所を登録する：</strong> 「新規登録」から新しい販売場所を地図に追加して共有しましょう！</p>
-                 </div>
-                 <!--<div class="help-image-placeholder">
-                     <i class="fas fa-map-marked-alt"></i>
-                 </div>-->
-             </div>
-             <button class="btn btn-primary w-100" id="closeHelpBtnLower">閉じる</button>
-         </div>
-     </div>
+<div id="helpModal" class="modal">
+    <div class="modal-content help-content">
+        <div class="modal-header">
+            <h2><i class="fas fa-question-circle"></i> 使い方マニュアル</h2>
+            <button class="close-btn" onclick="closeHelpModal()">&times;</button>
+        </div>
+        <div class="modal-body help-body">
+            <div class="manual-container">
+                <div class="manual-item">
+                    <h4>1. 地図から薪を探す</h4>
+                    <img src="img/manual1.png" alt="使い方1" class="manual-img">
+                    <p>ピンをタップすると、その場所の薪情報や詳細を確認できます。</p>
+                </div>
+                <div class="manual-item">
+                    <h4>2. 新しく登録する</h4>
+                    <img src="img/manual2.png" alt="使い方2" class="manual-img">
+                    <p>右下の「＋」ボタンから新規登録。地図を直接タップして位置を指定できます。</p>
+                </div>
+                <div class="manual-item">
+                    <h4>3. 詳細を確認する</h4>
+                    <img src="img/manual3.png" alt="使い方3" class="manual-img">
+                    <p>詳細画面では価格や薪の種類、最終更新日などを確認できます。</p>
+                </div>
+                <div class="manual-item">
+                    <h4>4. 情報を編集・修正</h4>
+                    <img src="img/manual4.png" alt="使い方4" class="manual-img">
+                    <p>「編集」ボタンから、古くなった情報や間違った情報を最新に書き換えられます。</p>
+                </div>
+                <div class="manual-item">
+                    <h4>5. Googleマップでナビ</h4>
+                    <img src="img/manual5.png" alt="使い方5" class="manual-img">
+                    <p>「Googleマップ」ボタンを押すと、公式アプリが開いてナビが始まります。</p>
+                </div>
+                <div class="manual-item">
+                    <h4>6. 不適切な情報の通報</h4>
+                    <img src="img/manual6.png" alt="使い方6" class="manual-img">
+                    <p>旗のアイコンをタップして通報。一定数たまると自動的に非表示になります。</p>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button onclick="closeHelpModal()" class="btn-primary" style="width: 100%; padding: 12px; border-radius: 8px;">閉じる</button>
+        </div>
+    </div>
+</div>
 
     <!-- ローディング -->
     <div id="loading" class="loading">
