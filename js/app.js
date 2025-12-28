@@ -519,6 +519,13 @@ window.showDetail = async function(locationId) {
                     <i class="fas fa-map-marked-alt"></i> 地図
                 </button>
                 
+                <a href="https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}" 
+                   target="_blank" 
+                   class="btn btn-outline" 
+                   style="text-decoration: none; display: flex; align-items: center; justify-content: center; background-color: #fff; border: 1px solid #ddd; color: #333; padding: 8px 12px; border-radius: 6px; font-size: 14px;">
+                    <i class="fab fa-google" style="margin-right: 5px; color: #4285F4;"></i> Googleマップ
+                </a>
+                
                 <button class="btn btn-secondary" onclick="openEditModal('${location.id}')">
                     <i class="fas fa-edit"></i> 編集
                 </button>
@@ -532,14 +539,14 @@ window.showDetail = async function(locationId) {
                 </div>
                 
                 <button onclick="window.reportLocation('${location.id}')" 
-        style="background: none !important; 
-               border: none !important; 
-               box-shadow: none !important; 
-               padding: 0 !important; 
-               cursor: pointer; 
-               margin-left: auto;">
-    <i class="fas fa-flag" style="font-size: 1.5rem !important; color: #d35400 !important;"></i> 通報
-</button>
+                        style="background: none !important; 
+                               border: none !important; 
+                               box-shadow: none !important; 
+                               padding: 0 !important; 
+                               cursor: pointer; 
+                               margin-left: auto;">
+                    <i class="fas fa-flag" style="font-size: 1.5rem !important; color: #d35400 !important;"></i> 通報
+                </button>
             </div>
         `;
         
