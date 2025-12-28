@@ -206,7 +206,7 @@ function initEventListeners() {
     }
 }
 
-      // ヘルプモーダルを開く
+   /*   // ヘルプモーダルを開く
       document.getElementById('helpBtn').addEventListener('click', () => {
           document.getElementById('helpModal').classList.add('active');
           document.body.style.overflow = 'hidden';
@@ -220,7 +220,7 @@ function initEventListeners() {
 
       document.getElementById('closeHelpBtn').addEventListener('click', closeHelp);
       document.getElementById('closeHelpBtnLower').addEventListener('click', closeHelp);
-
+*/
 
 // app.js の initEventListeners 内に追加
 const locateBtn = document.getElementById('locateBtn');
@@ -1226,3 +1226,24 @@ if (listPanel && listToggle) {
     });
 }
 
+// ============================================
+// ヘルプモーダルの制御
+// ============================================
+window.openHelpModal = function() {
+    const modal = document.getElementById('helpModal');
+    if (modal) modal.style.display = 'block';
+};
+
+window.closeHelpModal = function() {
+    const modal = document.getElementById('helpModal');
+    if (modal) modal.style.display = 'none';
+};
+
+// モーダルの外側をクリックしたら閉じる設定（お好みで）
+window.onclick = function(event) {
+    const helpModal = document.getElementById('helpModal');
+    if (event.target == helpModal) {
+        helpModal.style.display = "none";
+    }
+    // 既存の詳細モーダルなどの処理がある場合はここに追加
+};
