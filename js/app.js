@@ -486,10 +486,10 @@ window.showDetail = async function(locationId) {
 
         // 🟢 通報状態のテキスト（5回以上なら「非表示中」と表示）
         const reportCount = location.report_count || 0;
-        const reportStatusHtml = reportCount > 0 
+        /*const reportStatusHtml = reportCount > 0 
             ? `<p style="color: var(--danger-color); font-size: 0.8rem;">
                 <i class="fas fa-exclamation-circle"></i> この情報は現在 ${reportCount} 回通報されています。
-               </p>` : '';
+               </p>` : '';*/
         
         detailContent.innerHTML = `
             <div class="detail-section">
@@ -528,14 +528,14 @@ window.showDetail = async function(locationId) {
                     <i class="fas fa-edit"></i> 編集
                 </button>
 
-                <button class="btn btn-report" onclick="window.reportLocation('${location.id}')" style="background: none; border: 1px solid #ccc; color: #666; margin-left: auto;">
-                    <i class="fas fa-flag"></i> 通報
-                </button>
             </div>
             
             <div class="detail-section">
                 <h3><i class="fas fa-history"></i> 最終更新日</h3>
                 <p>${lastUpdate}</p>
+            <button class="btn btn-report" onclick="window.reportLocation('${location.id}')" style="background: none; border: 1px solid #ccc; color: #666; margin-left: auto;">
+                    <i class="fas fa-flag"></i> 通報
+                </button>
             </div>
         `;
         
