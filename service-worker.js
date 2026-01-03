@@ -7,12 +7,12 @@ const urlsToCache = [
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
   'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css',
-  'images/manual1.png',
-  'images/manual2.png',
-  'images/manual3.png',
-  'images/manual4.png',
-  'images/manual5.png',
-  'images/manual6.png'
+  'img/manual1.png',
+  'img/manual2.png',
+  'img/manual3.png',
+  'img/manual4.png',
+  'img/manual5.png',
+  'img/manual6.png'
 ];
 
 // インストール時にキャッシュを作成
