@@ -48,7 +48,7 @@ function initMap() {
     L.control.zoom({ position: 'bottomright' }).addTo(map);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors',
+        attribution: '© OpenStreetMap contributors | <b>App By ゆきぬ</b>',
         maxZoom: 19,
         noWrap: true
     }).addTo(map);
