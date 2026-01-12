@@ -104,7 +104,11 @@
                 </button>
             </div>
             <form id="addLocationForm" novalidate>
-               <!--<div class="search-outer-container">
+               <input type="hidden" id="editId">
+               <input type="hidden" id="salesPeriod">
+                <input type="hidden" id="contactInfo">
+                <input type="hidden" id="description">
+                <!--<div class="search-outer-container">
                    <label class="form-label">場所を検索 (住所や施設名)</label>
                    <div class="search-flex-box">
                        <input type="text" id="placeSearch" class="form-control" placeholder="例: 東京都千代田区">
@@ -169,7 +173,9 @@
                     <button type="button" id="getCurrentLocation" class="btn btn-outline-secondary">
                         <i class="fas fa-location-arrow"></i> 現在地を取得
                     </button>
-                </div>
+                </div><input type="hidden" id="salesPeriod">
+                    <input type="hidden" id="contactInfo">
+                    <input type="hidden" id="description">
                
                 <div class="form-group">
                     <label for="notes">備考</label>
@@ -204,7 +210,7 @@
         <div class="modal-content help-content">
             <div class="modal-header">
                 <h2><i class="fas fa-question-circle"></i> 使い方マニュアル</h2>
-                <button class="close-btn" onclick="closeHelpModal()">&times;</button>
+                <button class="close-btn" onclick="window.closeHelpModal()">&times;</button>
             </div>
             <div class="modal-body help-body">
                 <div class="manual-container">
@@ -253,7 +259,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button onclick="closeHelpModal()" class="btn-primary" style="width: 100%; padding: 12px; border-radius: 8px;">閉じる</button>
+                <button onclick="window.closeHelpModal()" class="btn-primary" style="width: 100%; padding: 12px; border-radius: 8px;">閉じる</button>
             </div>
         </div>
     </div>

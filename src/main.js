@@ -58,12 +58,12 @@ document.addEventListener('DOMContentLoaded', () => {
  * アプリケーション全体を初期化
  */
 function initializeApp() {
+    setupGlobalFunctions(); // グローバル関数を最初に設定
     initMap();
     initServiceWorker();
     initEventListeners();
     loadLocations();
     setFillHeight();
-    setupGlobalFunctions();
 }
 
 /**
@@ -93,11 +93,20 @@ function setupGlobalFunctions() {
     window.focusOnMap = focusOnMap;
 
     // アプリケーション機能
-    window.viewDetails = viewDetails;
+    window.showDetail = showDetail;
+    window.viewDetails = showDetail; // 互換性のためviewDetailsも設定
     window.reportLocation = reportLocation;
     window.openEditModal = openEditModal;
     window.openHelpModal = openHelpModal;
     window.closeHelpModal = closeHelpModal;
+
+    // デバッグ用：グローバル関数の設定を確認
+    console.log('Global functions setup:', {
+        showDetail: typeof window.showDetail,
+        viewDetails: typeof window.viewDetails,
+        openModal: typeof window.openModal,
+        closeModal: typeof window.closeModal
+    });
 }
 
 // ======================
@@ -242,7 +251,7 @@ function updateListFromMap() {
     }
 
     listContent.innerHTML = visibleLocations.map(loc => `
-        <div class="location-card" onclick="viewDetails(${loc.id})">
+        <div class="location-card" onclick="window.showDetail('${loc.id}')">
             <div class="location-card-header">
                 <div class="location-card-title">${loc.location_name || '名称未設定'}</div>
             </div>
@@ -279,9 +288,23 @@ function openAddModal() {
 /**
  * 追加モーダルを閉じる
  */
+/*function closeAddModal() {
+    closeModal('addModal');
+    resetForm('addLocationForm');
+}*/
 function closeAddModal() {
     closeModal('addModal');
     resetForm('addLocationForm');
+    
+    // 隠しIDを空にする
+    document.getElementById('editId').value = '';
+    
+    // 見た目を「新規登録」に戻す
+    const modalHeader = document.querySelector('#addModal .modal-header h2');
+    const submitBtn = document.querySelector('#addModal button[type="submit"]');
+    
+    if (modalHeader) modalHeader.innerHTML = '<i class="fas fa-plus-circle"></i> 薪販売場所の登録';
+    if (submitBtn) submitBtn.innerHTML = '<i class="fas fa-save"></i> 登録';
 }
 
 /**
@@ -312,7 +335,7 @@ function closeHelpModal() {
 /**
  * 場所の詳細を表示
  */
-async function viewDetails(id) {
+async function showDetail(id) {
     showLoading();
     try {
         const location = await fetchLocationById(id);
@@ -353,7 +376,7 @@ async function viewDetails(id) {
             ` : ''}
 
             <div class="detail-section detail-actions">
-                <button class="btn btn-primary" onclick="focusOnMap(${location.latitude}, ${location.longitude}); closeModal('detailModal'); document.getElementById('listPanel').classList.add('collapsed');">
+                <button class="btn btn-primary" onclick="window.focusOnMap(${location.latitude}, ${location.longitude}); window.closeModal('detailModal'); document.getElementById('listPanel').classList.add('collapsed');">
                     <i class="fas fa-map-marked-alt"></i> 地図
                 </button>
 
@@ -361,7 +384,7 @@ async function viewDetails(id) {
                     <i class="fab fa-google"></i> Googleマップで開く
                 </a>
 
-                <button class="btn btn-secondary" onclick="openEditModal('${location.id}')">
+                <button class="btn btn-secondary" onclick="window.openEditModal('${location.id}')">
                     <i class="fas fa-edit"></i> 編集
                 </button>
             </div>
@@ -372,7 +395,7 @@ async function viewDetails(id) {
                     <p>${lastUpdate}</p>
                 </div>
 
-                <button onclick="reportLocation('${location.id}')"
+                <button onclick="window.reportLocation('${location.id}')"
                         style="background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; cursor: pointer; margin-left: auto;">
                     <i class="fas fa-flag" style="font-size: 1.5rem !important; color: #d35400 !important;"></i> 通報
                 </button>
@@ -404,10 +427,8 @@ function getFormData() {
         amount: document.getElementById('amount').value.trim(),
         latitude: parseFloat(document.getElementById('latitude').value),
         longitude: parseFloat(document.getElementById('longitude').value),
-        notes: document.getElementById('notes').value.trim(),
-        sales_period: document.getElementById('salesPeriod').value.trim(),
-        contact_info: document.getElementById('contactInfo').value.trim(),
-        description: document.getElementById('description').value.trim()
+        notes: document.getElementById('notes').value.trim()
+        // sales_period, contact_info, description は一旦削除
     };
 }
 
@@ -439,7 +460,7 @@ function validateFormData(data) {
 /**
  * フォーム送信処理
  */
-async function handleSubmit(e) {
+/*async function handleSubmit(e) {
     e.preventDefault();
 
     const formData = getFormData();
@@ -462,6 +483,41 @@ async function handleSubmit(e) {
     } finally {
         hideLoading();
     }
+}*/
+/**
+ * フォーム送信処理（新規・編集 兼用）
+ */
+async function handleSubmit(e) {
+    e.preventDefault();
+
+    const editId = document.getElementById('editId').value; // 隠しIDを取得
+    const formData = getFormData(); // 既存の取得関数を利用
+    const validation = validateFormData(formData);
+
+    if (!validation.valid) {
+        showToast(validation.message, 'error');
+        return;
+    }
+
+    showLoading();
+    try {
+        if (editId) {
+            // IDがあれば「更新」
+            await updateLocation(editId, formData);
+            showToast('更新が完了しました！', 'success');
+        } else {
+            // IDがなければ「新規」
+            await addLocation(formData);
+            showToast('登録が完了しました！', 'success');
+        }
+        closeAddModal(); // フォームを閉じてリセット
+        await loadLocations({}, true);
+    } catch (error) {
+        console.error('保存エラー:', error);
+        showToast('保存に失敗しました', 'error');
+    } finally {
+        hideLoading();
+    }
 }
 
 // ======================
@@ -471,7 +527,7 @@ async function handleSubmit(e) {
 /**
  * 編集モーダルを開く
  */
-async function openEditModal(id) {
+/*async function openEditModal(id) {
     showLoading();
     try {
         const location = await fetchLocationById(id);
@@ -493,6 +549,40 @@ async function openEditModal(id) {
         closeModal('detailModal');
         openModal('editModal');
 
+    } catch (error) {
+        console.error('編集データ取得エラー:', error);
+        showToast('データの取得に失敗しました', 'error');
+    } finally {
+        hideLoading();
+    }
+}*/
+async function openEditModal(id) {
+    closeModal('detailModal');
+    showLoading();
+    try {
+        const location = await fetchLocationById(id);
+        if (!location) throw new Error("Location not found");
+
+        // 隠しフィールドにIDをセット
+        document.getElementById('editId').value = id; 
+
+        // 登録用フォームの各入力欄（IDが locationName 等）に既存の値をセット
+        document.getElementById('locationName').value = location.location_name || '';
+        document.getElementById('woodType').value = location.wood_type || '';
+        document.getElementById('amount').value = location.amount || '';
+        document.getElementById('price').value = location.price || '';
+        document.getElementById('latitude').value = location.latitude || '';
+        document.getElementById('longitude').value = location.longitude || '';
+        document.getElementById('notes').value = location.notes || '';
+
+        // モーダルの見出しとボタンを「編集モード」に変更
+        const modalHeader = document.querySelector('#addModal .modal-header h2');
+        const submitBtn = document.querySelector('#addModal button[type="submit"]');
+        
+        if (modalHeader) modalHeader.innerHTML = '<i class="fas fa-edit"></i> 薪販売場所の編集';
+        if (submitBtn) submitBtn.innerHTML = '<i class="fas fa-save"></i> 更新';
+
+        openModal('addModal');
     } catch (error) {
         console.error('編集データ取得エラー:', error);
         showToast('データの取得に失敗しました', 'error');
@@ -527,7 +617,7 @@ document.addEventListener('DOMContentLoaded', () => {
 /**
  * 編集フォーム送信処理
  */
-async function handleEditSubmit(e) {
+/*async function handleEditSubmit(e) {
     e.preventDefault();
 
     const id = document.getElementById('editId').value;
@@ -550,6 +640,39 @@ async function handleEditSubmit(e) {
         await updateLocation(id, updates);
         showToast('更新が完了しました！', 'success');
         closeModal('editModal');
+        await loadLocations({}, true);
+    } catch (error) {
+        console.error('更新エラー:', error);
+        showToast('更新に失敗しました', 'error');
+    } finally {
+        hideLoading();
+    }
+}*/
+async function handleEditSubmit(e) {
+    e.preventDefault();
+
+    const id = document.getElementById('editId').value; // 隠しフィールドから取得
+    const updates = {
+        // ID名を HTML に合わせる（edit を取る）
+        location_name: document.getElementById('locationName').value.trim(),
+        wood_type: document.getElementById('woodType').value.trim(),
+        price: document.getElementById('price').value.trim(),
+        amount: document.getElementById('amount').value.trim(),
+        latitude: parseFloat(document.getElementById('latitude').value),
+        longitude: parseFloat(document.getElementById('longitude').value),
+        notes: document.getElementById('notes').value.trim(),
+        // 以下の3つは HTML に入力欄がない場合、エラーを避けるため固定値にするかHTML側に追加が必要です
+        sales_period: "", 
+        contact_info: "",
+        description: "",
+        updated_at: new Date().toISOString()
+    };
+
+    showLoading();
+    try {
+        await updateLocation(id, updates);
+        showToast('更新が完了しました！', 'success');
+        closeModal('addModal'); // editModal ではなく addModal を閉じる
         await loadLocations({}, true);
     } catch (error) {
         console.error('更新エラー:', error);

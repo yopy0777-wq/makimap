@@ -57,7 +57,7 @@ export function createPopupContent(locations) {
                 }
 
                 <button
-                    onclick="window.viewDetails(${loc.id})"
+                    onclick="window.showDetail('${loc.id}')"
                     style="margin-top: 0.5rem; padding: 0.4rem 0.8rem; background-color: #8B4513; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem; width: 100%;">
                     詳細を見る
                 </button>
