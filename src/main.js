@@ -170,7 +170,7 @@ function handleLocateBtn() {
 }
 
 // データ読み込み
-async function loadLocations(filters = {}) {
+async function loadLocations(filters = {}, preventReset = false) {
     showLoading();
     try {
         let url = `${CONFIG.SUPABASE_URL}/rest/v1/${CONFIG.TABLE_NAME}?select=*&report_count=lt.${CONFIG.REPORT_THRESHOLD}`;
@@ -196,7 +196,7 @@ async function loadLocations(filters = {}) {
             );
         }
         
-        displayLocationsOnMap(filteredLocations);
+        displayLocationsOnMap(filteredLocations, preventReset);
         updateListFromMap();
         
     } catch (error) {
@@ -208,7 +208,7 @@ async function loadLocations(filters = {}) {
 }
 
 // 地図にマーカー表示
-function displayLocationsOnMap(locations) {
+function displayLocationsOnMap(locations, preventReset = false) {
     if (markerClusterGroup) {
         map.removeLayer(markerClusterGroup);
     }
@@ -244,7 +244,7 @@ function displayLocationsOnMap(locations) {
 
     map.addLayer(markerClusterGroup);
 
-    if (markers.length > 0 && locations.length <= 50) {
+    if (!preventReset && markers.length > 0 && locations.length <= 50) {
         const group = L.featureGroup(markers);
         map.fitBounds(group.getBounds().pad(0.1));
     }
@@ -498,7 +498,7 @@ async function handleSubmit(e) {
             showToast('登録が完了しました！', 'success');
             closeAddModal();
             document.getElementById('addLocationForm').reset();
-            loadLocations();
+            loadLocations({}, true);
         } else {
             throw new Error('登録に失敗しました');
         }
@@ -717,7 +717,7 @@ async function handleUpdate(e) {
         if (response.ok) {
             showToast('更新が完了しました！', 'success');
             closeAddModal();
-            loadLocations();
+            loadLocations({}, true);
         } else {
             throw new Error('更新に失敗しました');
         }
