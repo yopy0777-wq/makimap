@@ -25,7 +25,8 @@ import {
     deleteLocation,
     incrementReportCount,
     searchAddress as apiSearchAddress,
-    sendContact
+    sendContact,
+    pingKeepalive
 } from './api.js';
 import {
     initMap,
@@ -64,6 +65,7 @@ function initializeApp() {
     initEventListeners();
     loadLocations();
     setFillHeight();
+    pingKeepalive();
 }
 
 /**

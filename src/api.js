@@ -155,6 +155,29 @@ export async function searchAddress(query) {
 }
 
 /**
+ * Supabaseプロジェクトの停止を防ぐためにkeepaliveテーブルを更新
+ * アプリ起動時に呼び出し、updated_atを現在時刻に更新する
+ */
+export async function pingKeepalive() {
+    const url = `${CONFIG.SUPABASE_URL}/rest/v1/keepalive`;
+
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'apikey': CONFIG.SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'resolution=merge-duplicates'
+        },
+        body: JSON.stringify({ id: 1, updated_at: new Date().toISOString() })
+    });
+
+    if (!response.ok) {
+        console.warn('Keepalive ping failed:', response.status);
+    }
+}
+
+/**
  * お問い合わせを送信
  * @param {Object} contactData - お問い合わせデータ
  * @returns {Promise<Object>} レスポンス
