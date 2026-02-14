@@ -317,7 +317,7 @@ main {
 
 .locate-btn {
     position: fixed;
-    bottom: 190px;
+    bottom: 210px;
     right: 20px;
     z-index: 1050;
     background: var(--bg-white);
@@ -334,7 +334,7 @@ main {
 }
 
 .leaflet-bottom.leaflet-right {
-    bottom: 30px !important;
+    bottom: 60px !important;
     right: 10px !important;
 }
 
