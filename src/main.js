@@ -748,8 +748,8 @@ async function handleDelete() {
  * フィルターを適用
  */
 async function applyFilter() {
-    const woodType = document.getElementById('filterWoodType').value.trim();
-    const search = document.getElementById('filterSearch').value.trim();
+    const woodType = document.getElementById('woodTypeFilter').value.trim();
+    const search = document.getElementById('searchQuery').value.trim();
 
     await loadLocations({ woodType, search }, true);
     showToast('フィルターを適用しました', 'success');
@@ -759,8 +759,8 @@ async function applyFilter() {
  * フィルターをクリア
  */
 async function clearFilter() {
-    document.getElementById('filterWoodType').value = '';
-    document.getElementById('filterSearch').value = '';
+    document.getElementById('woodTypeFilter').value = '';
+    document.getElementById('searchQuery').value = '';
     await loadLocations({}, true);
     showToast('フィルターをクリアしました', 'info');
 }
