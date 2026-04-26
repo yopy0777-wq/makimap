@@ -15,7 +15,8 @@ import {
     toggleFilter,
     setFillHeight,
     clearSearchResults,
-    selectSearchResult
+    selectSearchResult,
+    escHtml
 } from './utils.js';
 import {
     fetchLocations,
@@ -254,13 +255,13 @@ function updateListFromMap() {
     }
 
     listContent.innerHTML = visibleLocations.map(loc => `
-        <div class="location-card" onclick="window.showDetail('${loc.id}')">
+        <div class="location-card" onclick="window.showDetail('${escHtml(loc.id)}')">
             <div class="location-card-header">
-                <div class="location-card-title">${loc.location_name || '名称未設定'}</div>
+                <div class="location-card-title">${escHtml(loc.location_name) || '名称未設定'}</div>
             </div>
             <div class="location-card-info">
-                <p><i class="fas fa-tree"></i> ${loc.wood_type || '種類未設定'}</p>
-                <p><i class="fas fa-yen-sign"></i> ${loc.price || '価格未設定'}円${loc.amount ? ' / ' + loc.amount : ''}</p>
+                <p><i class="fas fa-tree"></i> ${escHtml(loc.wood_type) || '種類未設定'}</p>
+                <p><i class="fas fa-yen-sign"></i> ${escHtml(loc.price) || '価格未設定'}円${loc.amount ? ' / ' + escHtml(loc.amount) : ''}</p>
             </div>
         </div>
     `).join('');
@@ -353,17 +354,17 @@ async function showDetail(id) {
         detailContent.innerHTML = `
             <div class="detail-section">
                 <h3><i class="fas fa-store"></i> 場所名</h3>
-                <p>${location.location_name || '未設定'}</p>
+                <p>${escHtml(location.location_name) || '未設定'}</p>
             </div>
 
             <div class="detail-section">
                 <h3><i class="fas fa-tree"></i> 薪の種類</h3>
-                <p>${location.wood_type || '未設定'}</p>
+                <p>${escHtml(location.wood_type) || '未設定'}</p>
             </div>
 
             <div class="detail-section">
                 <h3><i class="fas fa-yen-sign"></i> 価格 / 数量</h3>
-                <p>${location.price || '未設定'}円 ${location.amount ? ' / ' + location.amount : ''}</p>
+                <p>${escHtml(location.price) || '未設定'}円 ${location.amount ? ' / ' + escHtml(location.amount) : ''}</p>
             </div>
 
             <div class="detail-section">
@@ -374,7 +375,7 @@ async function showDetail(id) {
             ${location.notes ? `
                 <div class="detail-section">
                     <h3><i class="fas fa-sticky-note"></i> 備考</h3>
-                    <p style="white-space: pre-wrap;">${location.notes}</p>
+                    <p style="white-space: pre-wrap;">${escHtml(location.notes)}</p>
                 </div>
             ` : ''}
 
@@ -387,7 +388,7 @@ async function showDetail(id) {
                     <i class="fab fa-google"></i> Googleマップで開く
                 </a>
 
-                <button class="btn btn-secondary" onclick="window.openEditModal('${location.id}')">
+                <button class="btn btn-secondary" onclick="window.openEditModal('${escHtml(location.id)}')">
                     <i class="fas fa-edit"></i> 編集
                 </button>
             </div>
@@ -395,10 +396,10 @@ async function showDetail(id) {
             <div class="detail-section last-update-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
                 <div>
                     <h3><i class="fas fa-history"></i> 最終更新日</h3>
-                    <p>${lastUpdate}</p>
+                    <p>${escHtml(lastUpdate)}</p>
                 </div>
 
-                <button onclick="window.reportLocation('${location.id}')"
+                <button onclick="window.reportLocation('${escHtml(location.id)}')"
                         style="background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; cursor: pointer; margin-left: auto;">
                     <i class="fas fa-flag" style="font-size: 1.5rem !important; color: #d35400 !important;"></i> 通報
                 </button>

@@ -5,8 +5,8 @@
 // Supabase設定
 export const CONFIG = {
     TABLE_NAME: 'firewood_locations',
-    SUPABASE_URL: 'https://plmbomjfhfzpucrexqpp.supabase.co',
-    SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsbWJvbWpmaGZ6cHVjcmV4cXBwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzk5NTIsImV4cCI6MjA4MDc1NTk1Mn0.09UMcHdN2pdW7CVHb4X5WFL6obm1qw7cXdUhHS-RMC0',
+    SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
+    SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY,
     DEFAULT_CENTER: [36.5, 138.0],
     DEFAULT_ZOOM: 6,
     REPORT_THRESHOLD: 20

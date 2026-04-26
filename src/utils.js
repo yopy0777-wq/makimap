@@ -5,6 +5,21 @@
 import { UI_CONFIG } from './constants.js';
 
 /**
+ * HTMLエスケープ（XSS防止）
+ * @param {*} str - エスケープする値
+ * @returns {string} エスケープされた文字列
+ */
+export function escHtml(str) {
+    if (str == null) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#x27;');
+}
+
+/**
  * 座標で場所をグループ化
  * @param {Array} locations - 場所の配列
  * @returns {Object} 座標をキーとしたグループ化されたオブジェクト
@@ -32,11 +47,12 @@ export function createPopupContent(locations) {
     // 場所名とボタンを先に表示（最初の場所のみ）
     if (locations.length > 0) {
         const firstLoc = locations[0];
+        const safeNameAttr = escHtml(JSON.stringify(firstLoc.location_name || ''));
         html += `
             <div style="text-align: center; margin-bottom: 0.8rem; padding-bottom: 0.8rem; border-bottom: 2px solid #8B4513;">
-                <h3 style="margin: 0 0 0.6rem 0; color: #8B4513; font-size: 1.1rem; font-weight: bold;">${firstLoc.location_name || '名称未設定'}</h3>
+                <h3 style="margin: 0 0 0.6rem 0; color: #8B4513; font-size: 1.1rem; font-weight: bold;">${escHtml(firstLoc.location_name) || '名称未設定'}</h3>
                 <button
-                    onclick="window.openAddToLocationModal(${firstLoc.latitude}, ${firstLoc.longitude}, '${firstLoc.location_name ? firstLoc.location_name.replace(/'/g, "\\'") : ''}')"
+                    onclick="window.openAddToLocationModal(${firstLoc.latitude}, ${firstLoc.longitude}, ${safeNameAttr})"
                     style="padding: 0.3rem 0.6rem; background-color: #e26d37; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.75rem;">
                     <i class="fas fa-plus"></i> 追加登録
                 </button>
@@ -46,28 +62,29 @@ export function createPopupContent(locations) {
 
     // 薪の情報を表示
     locations.forEach((loc, index) => {
+        const noteText = loc.description || loc.notes;
         html += `
             <div style="${index > 0 ? 'margin-top: 10px; padding-top: 10px; border-top: 1px dashed #ccc;' : ''}">
-                <p style="margin: 0.2rem 0; font-size: 0.9rem;"><strong>🪵 種類:</strong> ${loc.wood_type || '未設定'}</p>
-                <p style="margin: 0.2rem 0; font-size: 0.9rem;"><strong>💰 価格:</strong> ${loc.price || '未設定'}円${loc.amount ? ' / ' + loc.amount : ''}</p>
+                <p style="margin: 0.2rem 0; font-size: 0.9rem;"><strong>🪵 種類:</strong> ${escHtml(loc.wood_type) || '未設定'}</p>
+                <p style="margin: 0.2rem 0; font-size: 0.9rem;"><strong>💰 価格:</strong> ${escHtml(loc.price) || '未設定'}円${loc.amount ? ' / ' + escHtml(loc.amount) : ''}</p>
 
-                ${loc.description || loc.notes
-                    ? `<p style="margin: 0.2rem 0; font-size: 0.85rem; color: #666;"><strong>📝 詳細:</strong> ${loc.description || loc.notes}</p>`
+                ${noteText
+                    ? `<p style="margin: 0.2rem 0; font-size: 0.85rem; color: #666;"><strong>📝 詳細:</strong> ${escHtml(noteText)}</p>`
                     : ''
                 }
 
                 ${loc.sales_period
-                    ? `<p style="margin: 0.2rem 0; font-size: 0.85rem;"><strong>📅 販売時期:</strong> ${loc.sales_period}</p>`
+                    ? `<p style="margin: 0.2rem 0; font-size: 0.85rem;"><strong>📅 販売時期:</strong> ${escHtml(loc.sales_period)}</p>`
                     : ''
                 }
 
                 ${loc.contact_info
-                    ? `<p style="margin: 0.2rem 0; font-size: 0.85rem;"><strong>📞 連絡先:</strong> ${loc.contact_info}</p>`
+                    ? `<p style="margin: 0.2rem 0; font-size: 0.85rem;"><strong>📞 連絡先:</strong> ${escHtml(loc.contact_info)}</p>`
                     : ''
                 }
 
                 <button
-                    onclick="window.showDetail('${loc.id}')"
+                    onclick="window.showDetail('${escHtml(loc.id)}')"
                     style="margin-top: 0.4rem; padding: 0.25rem 0.5rem; background-color: #95a5a6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.7rem; width: 100%;">
                     <i class="fas fa-info-circle"></i> 詳細を見る
                 </button>
