@@ -103,6 +103,7 @@ function setupGlobalFunctions() {
     window.openAddToLocationModal = openAddToLocationModal;
     window.openHelpModal = openHelpModal;
     window.closeHelpModal = closeHelpModal;
+    window.openPrivacyModal = () => openModal('privacyModal');
 
     // デバッグ用：グローバル関数の設定を確認
     console.log('Global functions setup:', {

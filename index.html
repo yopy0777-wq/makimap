@@ -11,10 +11,18 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E🪵%3C/text%3E%3C/svg%3E">
     
     <!-- External Libraries -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
+          integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.css"
+          integrity="sha512-RLEjtaFGdC4iQMJDbMzim/dOvAu+8Qp9sw7QE4wIMYcg2goVoivzwgSZq9CsIxp4xKAZPKh5J2f2lOko2Ze6FQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.Default.css"
+          integrity="sha512-BBToHPBStgMiw0lD4AtkRIZmdndhB6aQbXpX7omcrXeG2PauGBl2lzq2xUZTxaLxYz5IDHlmneCZ1IJ+P3kYtQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="/src/style.css">
@@ -298,7 +306,51 @@
                     <i class="fas fa-paper-plane"></i> 送信する
                 </button>
             </div>
+            <p style="font-size:0.75rem; color:#888; margin-top:12px; text-align:center;">
+                送信することで<button type="button" onclick="window.openPrivacyModal()" style="background:none;border:none;color:#8B4513;text-decoration:underline;cursor:pointer;font-size:0.75rem;padding:0;">プライバシーポリシー</button>に同意したものとみなします。
+            </p>
         </form>
+    </div>
+</div>
+
+<!-- プライバシーポリシーモーダル -->
+<div id="privacyModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><i class="fas fa-shield-alt"></i> プライバシーポリシー</h2>
+            <button class="close-btn" onclick="window.closeModal('privacyModal')">&times;</button>
+        </div>
+        <div class="modal-body" style="padding: 1rem 1.5rem; max-height: 70vh; overflow-y: auto; line-height: 1.7;">
+            <p style="font-size:0.8rem; color:#888;">最終更新日：2026年4月26日</p>
+
+            <h3 style="margin-top:1rem; color:#8B4513;">1. 収集する情報</h3>
+            <p>本アプリは以下の情報を収集します。</p>
+            <ul>
+                <li><strong>薪販売場所情報</strong>：ユーザーが任意で登録した場所名・薪の種類・価格・緯度経度・備考。これらはアプリの性質上、すべての利用者に公開されます。</li>
+                <li><strong>お問い合わせ情報</strong>：お問い合わせフォームに入力したニックネームおよびメールアドレス（任意）。</li>
+            </ul>
+
+            <h3 style="margin-top:1rem; color:#8B4513;">2. 情報の利用目的</h3>
+            <ul>
+                <li>薪販売場所情報：地図上への表示および利用者間での情報共有</li>
+                <li>お問い合わせ情報：ご要望・不具合報告へのご返信（メールアドレスを入力した場合のみ）</li>
+            </ul>
+
+            <h3 style="margin-top:1rem; color:#8B4513;">3. 第三者提供</h3>
+            <p>収集した情報を第三者に販売・提供することはありません。ただし、データはSupabase（米国）のサーバーに保存されます。</p>
+
+            <h3 style="margin-top:1rem; color:#8B4513;">4. データの削除</h3>
+            <p>登録した薪情報の削除や、お問い合わせ情報の削除を希望される場合は、X（旧Twitter）@lowgeh またはお問い合わせフォームよりご連絡ください。</p>
+
+            <h3 style="margin-top:1rem; color:#8B4513;">5. Cookie・トラッキング</h3>
+            <p>本アプリはCookieや広告トラッキングを使用していません。</p>
+
+            <h3 style="margin-top:1rem; color:#8B4513;">6. お問い合わせ</h3>
+            <p>プライバシーポリシーに関するお問い合わせ：X（旧Twitter）<a href="https://twitter.com/lowgeh" target="_blank" rel="noopener noreferrer" style="color:#8B4513;">@lowgeh</a></p>
+        </div>
+        <div class="modal-footer">
+            <button onclick="window.closeModal('privacyModal')" class="btn btn-primary" style="width:100%; padding:12px; border-radius:8px;">閉じる</button>
+        </div>
     </div>
 </div>
 
@@ -308,8 +360,12 @@
 
     <div id="toast" class="toast"></div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"
+            integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js"
+            integrity="sha512-MQlyPV+ol2lp4KodaU/Xmrn+txc1TP15pOBF/2Sfre7MRsA/pB4Vy58bEqe9u7a7DczMLtU5wT8n7OblJepKbg=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="module" src="/src/main.js"></script>
 </body>
 </html>
